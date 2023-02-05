@@ -173,4 +173,5 @@ tags: 生活常识
 - [1 小时搞定全家保险](https://book.douban.com/subject/35232580/)
 - [保险公司 wikipedia](https://en.wikipedia.org/wiki/Insurance#Insurance_companies)
 - [保险公司和银行，哪个更安全](https://zhuanlan.zhihu.com/p/528130445)
-- [【保险内幕】我用在保险公司的亲身经验，告诉你保险公司到底有多…](https://zhuanlan.zhihu.com/p/145272776?utm_source=wechat_session&utm_medium=social&utm_oi=48243891240960) -[全面测评 152 款重疾险，选出 2020 年 6 月性价比之王](https://zhuanlan.zhihu.com/p/150438452?utm_id=0)
+- [【保险内幕】我用在保险公司的亲身经验，告诉你保险公司到底有多…](https://zhuanlan.zhihu.com/p/145272776?utm_source=wechat_session&utm_medium=social&utm_oi=48243891240960)
+- [全面测评 152 款重疾险，选出 2020 年 6 月性价比之王](https://zhuanlan.zhihu.com/p/150438452?utm_id=0)
