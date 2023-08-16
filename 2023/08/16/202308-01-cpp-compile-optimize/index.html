@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"frank2679.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.17.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="原理 做法 效果  原理cmake 官方文档：UNITY_BUILD — CMake 3.16.9 Documentation 原理解释：使用 Unity Build 加速 CMake 编译 - 知乎 (zhihu.com) cpp 代码由于历史原因只能以文件为单位进行编译，有以下问题   每个编译单元，都需要独立解析所有包含的头文件:a. 如果N个源文件引用到了同一个头文件，则这个头文件需要解">
+<meta property="og:type" content="article">
+<meta property="og:title" content="cpp 编译时间优化">
+<meta property="og:url" content="https://frank2679.github.io/2023/08/16/202308-01-cpp-compile-optimize/index.html">
+<meta property="og:site_name" content="Fire">
+<meta property="og:description" content="原理 做法 效果  原理cmake 官方文档：UNITY_BUILD — CMake 3.16.9 Documentation 原理解释：使用 Unity Build 加速 CMake 编译 - 知乎 (zhihu.com) cpp 代码由于历史原因只能以文件为单位进行编译，有以下问题   每个编译单元，都需要独立解析所有包含的头文件:a. 如果N个源文件引用到了同一个头文件，则这个头文件需要解">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://frank2679.github.io/202308-01-cpp-compile-optimize/1692151104184.png">
+<meta property="og:image" content="https://frank2679.github.io/202308-01-cpp-compile-optimize/1692151172333.png">
+<meta property="article:published_time" content="2023-08-16T02:48:50.000Z">
+<meta property="article:modified_time" content="2023-08-16T03:31:40.827Z">
+<meta property="article:author" content="Frank">
+<meta property="article:tag" content="efficiency">
+<meta property="article:tag" content="cpp">
+<meta property="article:tag" content="compiler">
+<meta property="article:tag" content="cmake IT">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://frank2679.github.io/202308-01-cpp-compile-optimize/1692151104184.png">
+
+
+<link rel="canonical" href="https://frank2679.github.io/2023/08/16/202308-01-cpp-compile-optimize/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://frank2679.github.io/2023/08/16/202308-01-cpp-compile-optimize/","path":"2023/08/16/202308-01-cpp-compile-optimize/","title":"cpp 编译时间优化"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>cpp 编译时间优化 | Fire</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Fire</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">星星之火</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8E%9F%E7%90%86"><span class="nav-number">1.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%81%9A%E6%B3%95"><span class="nav-number">2.</span> <span class="nav-text">做法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%88%E6%9E%9C"><span class="nav-number">3.</span> <span class="nav-text">效果</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Frank</p>
+  <div class="site-description" itemprop="description">about technology, living and fire</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://frank2679.github.io/2023/08/16/202308-01-cpp-compile-optimize/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Frank">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fire">
+      <meta itemprop="description" content="about technology, living and fire">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="cpp 编译时间优化 | Fire">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          cpp 编译时间优化
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2023-08-16 10:48:50 / 修改时间：11:31:40" itemprop="dateCreated datePublished" datetime="2023-08-16T10:48:50+08:00">2023-08-16</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><ul>
+<li><a href="#%E5%8E%9F%E7%90%86">原理</a></li>
+<li><a href="#%E5%81%9A%E6%B3%95">做法</a></li>
+<li><a href="#%E6%95%88%E6%9E%9C">效果</a></li>
+</ul>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>cmake 官方文档：<a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/v3.16/prop_tgt/UNITY_BUILD.html">UNITY_BUILD — CMake 3.16.9 Documentation</a></p>
+<p>原理解释：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/146434531">使用 Unity Build 加速 CMake 编译 - 知乎 (zhihu.com)</a></p>
+<p>cpp 代码由于历史原因只能以文件为单位进行编译，有以下问题</p>
+<blockquote>
+<ol>
+<li>每个编译单元，都需要独立解析所有包含的头文件:<br>a. 如果N个源文件引用到了同一个头文件，则这个头文件需要解析N次（对于 <code>protobuf</code>这类动辄几千上万行的头文件简直就是鬼故事）；<br>b. 如果头文件中有模板(STL&#x2F;Boost)，则该模板在每个cpp文件中使用时都会做一次实例化，N个源文件中的 <code>std::vector&lt;int&gt;</code>会实例化N次。</li>
+<li>每个源文件独立编译，导致编译优化时只能基于本文件内容进行优化，很难跨编译单元提供代码优化；</li>
+<li>基于问题2，C&#x2F;C++ 跨编译单元的优化只能交给链接器，而链接阶段是单进程，无法并行加速，导致大项目链接极慢。</li>
+</ol>
+<p>From <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/146434531">使用 Unity Build 加速 CMake 编译 - 知乎 (zhihu.com)</a></p>
+</blockquote>
+<p>unity build 的思路是将多个文件合入到一个 cpp 文件中，最后只编译合并后的 cpp，这样可以很大程度上解决上述问题。将哪些文件合并到一个 cpp 文件中，可以借鉴模块化思路，将一个模块的代码放到一个 cpp 中，如此，一个模块中的公用头文件就只会被编译一次。</p>
+<p>综上，对于<strong>模板</strong>用的多的场景，unity build 非常有效。</p>
+<h2 id="做法"><a href="#做法" class="headerlink" title="做法"></a>做法</h2><p>上面的知乎分享中给出了手动合并文件的做法，这种做法更精细，不过成本高，要求开发者对代码相当熟悉。其实 cmake 本身也支持 unity build，由 cmake 帮你决定哪些文件合并到一起，并且有一个上限——最多 UNITY_BUILD_BATCH_SIZE 个文件合并到一个文件中。</p>
+<blockquote>
+<p>When this property is set to true, the target source files will be combined into batches for faster compilation. This is done by creating a (set of) unity sources which <code>&lt;span class=&quot;pre&quot;&gt;#include&lt;/span&gt;</code> the original sources, then compiling these unity sources instead of the originals. This is known as a <em>Unity</em> or <em>Jumbo</em> build. The <a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/v3.16/prop_tgt/UNITY_BUILD_BATCH_SIZE.html#prop_tgt:UNITY_BUILD_BATCH_SIZE"><code>&lt;span class=&quot;pre&quot;&gt;UNITY_BUILD_BATCH_SIZE&lt;/span&gt;</code></a> property controls the upper limit on how many sources can be combined per unity source file.</p>
+</blockquote>
+<blockquote>
+<p>From: <a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/v3.16/prop_tgt/UNITY_BUILD.html">UNITY_BUILD — CMake 3.16.9 Documentation</a></p>
+</blockquote>
+<p>在 CMakeLists.txt 中做如下配置</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">if</span>(<span class="variable">$&#123;CMAKE_VERSION&#125;</span> <span class="keyword">VERSION_GREATER_EQUAL</span> <span class="string">&quot;3.16.9&quot;</span>)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">set_target_properties</span>(<span class="variable">$&#123;TARGET&#125;</span> PROPERTIES UNITY_BUILD <span class="keyword">ON</span>)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">set_target_properties</span>(<span class="variable">$&#123;TARGET&#125;</span> PROPERTIES UNITY_BUILD_BATCH_SIZE <span class="number">50</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">endif</span>()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h2><p>优化前</p>
+<p><img src="/202308-01-cpp-compile-optimize/1692151104184.png" alt="1692151104184"></p>
+<p>优化后</p>
+<p><img src="/202308-01-cpp-compile-optimize/1692151172333.png" alt="1692151172333"></p>
+<p>编译文件数量减少了，383 -&gt; 180，时间也减少了 226s -&gt; 33s，这个 build 中之所以有这么大的好处是因为该实现中大量使用了模板。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/efficiency/" rel="tag"># efficiency</a>
+              <a href="/tags/cpp/" rel="tag"># cpp</a>
+              <a href="/tags/compiler/" rel="tag"># compiler</a>
+              <a href="/tags/cmake-IT/" rel="tag"># cmake IT</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/06/26/202306-01-graphviz-md/" rel="prev" title="graphviz 简介">
+                  <i class="fa fa-chevron-left"></i> graphviz 简介
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Frank</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+<script class="next-config" data-name="utterances" type="application/json">{"enable":"enable","repo":"frank2679/blog_comment_frank","issue_term":"pathname","theme":"github-light"}</script>
+<script src="/js/third-party/comments/utterances.js"></script>
+
+</body>
+</html>
