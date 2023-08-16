@@ -179,7 +179,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2023-08-16 10:48:50 / 修改时间：11:31:40" itemprop="dateCreated datePublished" datetime="2023-08-16T10:48:50+08:00">2023-08-16</time>
+      <time title="创建时间：2023-08-16 10:48:50 / 修改时间：11:42:18" itemprop="dateCreated datePublished" datetime="2023-08-16T10:48:50+08:00">2023-08-16</time>
     </span>
 
   
@@ -221,9 +221,9 @@
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">if</span>(<span class="variable">$&#123;CMAKE_VERSION&#125;</span> <span class="keyword">VERSION_GREATER_EQUAL</span> <span class="string">&quot;3.16.9&quot;</span>)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">set_target_properties</span>(<span class="variable">$&#123;TARGET&#125;</span> PROPERTIES UNITY_BUILD <span class="keyword">ON</span>)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">set_target_properties</span>(<span class="variable">$&#123;TARGET&#125;</span> PROPERTIES UNITY_BUILD_BATCH_SIZE <span class="number">50</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">endif</span>()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <h2 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h2><p>优化前</p>
-<p><img src="/202308-01-cpp-compile-optimize/1692151104184.png" alt="1692151104184"></p>
+<p><img src="/2023/08/16/202308-01-cpp-compile-optimize/1692151104184.png" alt="1692151104184"></p>
 <p>优化后</p>
-<p><img src="/202308-01-cpp-compile-optimize/1692151172333.png" alt="1692151172333"></p>
+<p><img src="/2023/08/16/202308-01-cpp-compile-optimize/1692151172333.png" alt="1692151172333"></p>
 <p>编译文件数量减少了，383 -&gt; 180，时间也减少了 226s -&gt; 33s，这个 build 中之所以有这么大的好处是因为该实现中大量使用了模板。</p>
 
       
