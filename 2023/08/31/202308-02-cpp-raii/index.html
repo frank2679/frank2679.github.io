@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"frank2679.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.17.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="1. RAII 1.1. 问题场景   2. 使用 smart ptr 2.1. 指定 deleter 2.2. 使用 make_unique()   3. Summary  1. RAII代码中常常需要管理资源，可能是内存，可能是锁，或者是某个 handle 等等，下面抽象了 acquire, release 两个接口分别表示获取和释放资源。 1.1. 问题场景1234567891011121">
+<meta property="og:type" content="article">
+<meta property="og:title" content="聊聊 C++ RAII">
+<meta property="og:url" content="https://frank2679.github.io/2023/08/31/202308-02-cpp-raii/index.html">
+<meta property="og:site_name" content="Fire">
+<meta property="og:description" content="1. RAII 1.1. 问题场景   2. 使用 smart ptr 2.1. 指定 deleter 2.2. 使用 make_unique()   3. Summary  1. RAII代码中常常需要管理资源，可能是内存，可能是锁，或者是某个 handle 等等，下面抽象了 acquire, release 两个接口分别表示获取和释放资源。 1.1. 问题场景1234567891011121">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-08-31T14:14:35.000Z">
+<meta property="article:modified_time" content="2023-08-31T14:17:08.836Z">
+<meta property="article:author" content="Frank">
+<meta property="article:tag" content="cpp">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://frank2679.github.io/2023/08/31/202308-02-cpp-raii/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://frank2679.github.io/2023/08/31/202308-02-cpp-raii/","path":"2023/08/31/202308-02-cpp-raii/","title":"聊聊 C++ RAII"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>聊聊 C++ RAII | Fire</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Fire</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">星星之火</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-RAII"><span class="nav-number">1.</span> <span class="nav-text">1. RAII</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E9%97%AE%E9%A2%98%E5%9C%BA%E6%99%AF"><span class="nav-number">1.1.</span> <span class="nav-text">1.1. 问题场景</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E4%BD%BF%E7%94%A8-smart-ptr"><span class="nav-number">2.</span> <span class="nav-text">2. 使用 smart ptr</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E6%8C%87%E5%AE%9A-deleter"><span class="nav-number">2.1.</span> <span class="nav-text">2.1. 指定 deleter</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E4%BD%BF%E7%94%A8-make-unique"><span class="nav-number">2.2.</span> <span class="nav-text">2.2. 使用 make_unique()</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Summary"><span class="nav-number">3.</span> <span class="nav-text">3. Summary</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Frank</p>
+  <div class="site-description" itemprop="description">about technology, living and fire</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://frank2679.github.io/2023/08/31/202308-02-cpp-raii/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Frank">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fire">
+      <meta itemprop="description" content="about technology, living and fire">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="聊聊 C++ RAII | Fire">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          聊聊 C++ RAII
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2023-08-31 22:14:35 / 修改时间：22:17:08" itemprop="dateCreated datePublished" datetime="2023-08-31T22:14:35+08:00">2023-08-31</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><ul>
+<li><a href="#1-raii">1. RAII</a><ul>
+<li><a href="#11-%E9%97%AE%E9%A2%98%E5%9C%BA%E6%99%AF">1.1. 问题场景</a></li>
+</ul>
+</li>
+<li><a href="#2-%E4%BD%BF%E7%94%A8-smart-ptr">2. 使用 smart ptr</a><ul>
+<li><a href="#21-%E6%8C%87%E5%AE%9A-deleter">2.1. 指定 deleter</a></li>
+<li><a href="#22-%E4%BD%BF%E7%94%A8-make_unique">2.2. 使用 make_unique()</a></li>
+</ul>
+</li>
+<li><a href="#3-summary">3. Summary</a></li>
+</ul>
+<h2 id="1-RAII"><a href="#1-RAII" class="headerlink" title="1. RAII"></a>1. RAII</h2><p>代码中常常需要管理资源，可能是内存，可能是锁，或者是某个 handle 等等，下面抽象了 acquire, release 两个接口分别表示获取和释放资源。</p>
+<h3 id="1-1-问题场景"><a href="#1-1-问题场景" class="headerlink" title="1.1. 问题场景"></a>1.1. 问题场景</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> *<span class="title">acquire</span><span class="params">(<span class="type">int</span> size)</span> </span>&#123;</span><br><span class="line">    std::cout &lt;&lt; __FUNCTION__ &lt;&lt; <span class="string">&quot; &quot;</span> &lt;&lt; size &lt;&lt; std::endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">malloc</span>(size);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">release</span><span class="params">(<span class="type">void</span> *ptr)</span> </span>&#123;</span><br><span class="line">    <span class="built_in">free</span>(ptr);</span><br><span class="line">    std::cout &lt;&lt; __FUNCTION__ &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">doSomething</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">void</span> *ptr = <span class="built_in">acquire</span>(<span class="number">100</span>);</span><br><span class="line">    <span class="comment">// use of ptr</span></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">release</span>(ptr);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">doSomething</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>会有如下打印</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">acquire 100</span><br><span class="line">release</span><br></pre></td></tr></table></figure>
+
+<p>上面是 C 风格实现，这种实现需要程序员保证获取和释放一一对应，所以常常导致资源没释放，或者重复释放的问题。</p>
+<p>RAII 意思是在 scope 内申请的资源在退出 scope 的时候自动释放，不用程序员来管理。从而极大地解放了程序员的负担，也从根本上杜绝资源的泄漏和重复释放。</p>
+<h2 id="2-使用-smart-ptr"><a href="#2-使用-smart-ptr" class="headerlink" title="2. 使用 smart ptr"></a>2. 使用 smart ptr</h2><p>C++ built-in 的 smart ptr 具备 RAII 能力。</p>
+<h3 id="2-1-指定-deleter"><a href="#2-1-指定-deleter" class="headerlink" title="2.1. 指定 deleter"></a>2.1. 指定 deleter</h3><p>这样可以用 unique_ptr 的 RAII 机制，当 <code>doSomething()</code> 结束时，会调用 deleter 函数，也就是 release。</p>
+<p>实际上 acquire，release 是对 malloc，free 的封装，如果就用 malloc，free 的话是不需要特别指定的。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">doSomething</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">auto</span> ptr =</span><br><span class="line">        std::<span class="built_in">unique_ptr</span>&lt;<span class="type">void</span>, <span class="keyword">decltype</span>(&amp;release)&gt;(<span class="built_in">acquire</span>(<span class="number">100</span>), release);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但是这种做法有一种情况似乎不好处理，当 acquire 定义如下，就比较麻烦了。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">acquire2</span><span class="params">(<span class="type">void</span> **ptr, <span class="type">int</span> size)</span></span></span><br></pre></td></tr></table></figure>
+
+
+<p>对于上面处理不了的情形，可以用下面的办法，可以用。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">doSomething</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">void</span> *ptr = <span class="literal">nullptr</span>;</span><br><span class="line">    <span class="built_in">acquire2</span>(&amp;ptr, <span class="number">100</span>);</span><br><span class="line">    <span class="keyword">auto</span> gen_ptr =</span><br><span class="line">        std::<span class="built_in">unique_ptr</span>&lt;<span class="type">void</span>, <span class="keyword">decltype</span>(&amp;release)&gt;(std::<span class="built_in">move</span>(ptr), release);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这种实现不推荐，有以下两个原因</p>
+<ol>
+<li>长得丑；</li>
+<li>ptr 还在，很可能被拿来做别的事情，也可能被 double free；</li>
+</ol>
+<h3 id="2-2-使用-make-unique"><a href="#2-2-使用-make-unique" class="headerlink" title="2.2. 使用 make_unique()"></a>2.2. 使用 make_unique()</h3><p>对需要管理的资源封装成一个资源管理类，在 constructor, destructor 中进行申请和释放。</p>
+<blockquote>
+<p>make_unique是C++14引入的函数,它提供了一个更简单安全的方式来创建std::unique_ptr。</p>
+</blockquote>
+<blockquote>
+<p>std::make_unique可以避免手动使用new来创建对象,它将对象创建和内存分配合并到一步,这样可以避免手动delete带来的潜在危险。</p>
+</blockquote>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">CustomMemoryMan</span> &#123;</span><br><span class="line">  <span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">CustomMemoryMan</span>(<span class="type">int</span> size) &#123; ptr_ = <span class="built_in">acquire</span>(size); &#125;</span><br><span class="line">    ~<span class="built_in">CustomMemoryMan</span>() &#123; <span class="built_in">release</span>(ptr_); &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span>:</span><br><span class="line">    <span class="type">void</span> *ptr_ = <span class="literal">nullptr</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">doSomething</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">auto</span> mem = std::<span class="built_in">make_unique</span>&lt;CustomMemoryMan&gt;(<span class="number">100</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// use of gen_ptr</span></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-Summary"><a href="#3-Summary" class="headerlink" title="3. Summary"></a>3. Summary</h2><p>推荐最后的版本，即封装一个资源管理类，再使用 <code>make_unique</code> 来构建。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/cpp/" rel="tag"># cpp</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/08/16/202308-01-cpp-compile-optimize/" rel="prev" title="cpp 编译时间优化">
+                  <i class="fa fa-chevron-left"></i> cpp 编译时间优化
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Frank</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+<script class="next-config" data-name="utterances" type="application/json">{"enable":"enable","repo":"frank2679/blog_comment_frank","issue_term":"pathname","theme":"github-light"}</script>
+<script src="/js/third-party/comments/utterances.js"></script>
+
+</body>
+</html>
