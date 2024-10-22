@@ -63,9 +63,6 @@
       <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
   <div class="site-nav-toggle">
     <div class="toggle" aria-label="切换导航栏" role="button">
-        <span class="toggle-line"></span>
-        <span class="toggle-line"></span>
-        <span class="toggle-line"></span>
     </div>
   </div>
 
@@ -87,10 +84,6 @@
 
 
 
-<nav class="site-nav">
-  <ul class="main-menu menu"><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
-  </ul>
-</nav>
 
 
 
@@ -125,12 +118,12 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-count">11</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-count">11</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
@@ -147,123 +140,6 @@
     </div>
 
     <div class="main-inner index posts-expand">
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://frank2679.github.io/2024/10/22/20241022-code-coverage/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Frank">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Fire">
-      <meta itemprop="description" content="about technology, living and fire">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Fire">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/10/22/20241022-code-coverage/" class="post-title-link" itemprop="url">C++ Code Coverage</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2024-10-22 15:46:50 / 修改时间：17:17:16" itemprop="dateCreated datePublished" datetime="2024-10-22T15:46:50+08:00">2024-10-22</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>本文档介绍了如何在 C++ 项目中生成代码覆盖率报告。我们将使用 <code>lcov</code> 和 <code>gcovr</code> 工具来生成 HTML 格式的覆盖率报告。</p>
-<h2 id="示例项目"><a href="#示例项目" class="headerlink" title="示例项目"></a>示例项目</h2><p>以下是一个简单的 C++ 项目示例，展示了如何配置和生成代码覆盖率报告。</p>
-<h3 id="main-cpp"><a href="#main-cpp" class="headerlink" title="main.cpp"></a>main.cpp</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">cpp</span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">add</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span> </span>&#123; <span class="keyword">return</span> a + b; &#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">std::cout &lt;&lt; <span class="string">&quot;Hello, World!&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">std::cout &lt;&lt; <span class="string">&quot;2 + 3 = &quot;</span> &lt;&lt; <span class="built_in">add</span>(<span class="number">2</span>, <span class="number">3</span>) &lt;&lt; std::endl;</span><br><span class="line"><span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="CMakeLists-txt"><a href="#CMakeLists-txt" class="headerlink" title="CMakeLists.txt"></a>CMakeLists.txt</h3><figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">cmake_minimum_required</span>(VERSION <span class="number">3.10</span>)  </span><br><span class="line"><span class="keyword">project</span>(SimpleCppProject)  </span><br><span class="line"></span><br><span class="line"><span class="comment"># 选项：启用代码覆盖率  </span></span><br><span class="line"><span class="keyword">option</span>(COVERAGE <span class="string">&quot;Enable coverage reporting&quot;</span> <span class="keyword">ON</span>)  </span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(COVERAGE)  </span><br><span class="line">    <span class="keyword">add_compile_options</span>(--coverage)  </span><br><span class="line">    <span class="keyword">link_libraries</span>(--coverage)  </span><br><span class="line"><span class="keyword">endif</span>()  </span><br><span class="line"></span><br><span class="line"><span class="comment"># 添加可执行文件  </span></span><br><span class="line"><span class="keyword">add_executable</span>(simple_cpp main.cpp)</span><br></pre></td></tr></table></figure>
-
-
-<h2 id="生成代码覆盖率报告"><a href="#生成代码覆盖率报告" class="headerlink" title="生成代码覆盖率报告"></a>生成代码覆盖率报告</h2><h3 id="基本流程"><a href="#基本流程" class="headerlink" title="基本流程"></a>基本流程</h3><p><img src="/2024/10/22/20241022-code-coverage/03_cov_flow.drawio.svg"></p>
-<ol>
-<li><strong>CMake 添加编译选项</strong>：在 CMakeLists.txt 中启用代码覆盖率选项。</li>
-<li><strong>编译和运行程序</strong>：生成可执行文件并运行，生成 <code>.gcda</code> 和 <code>.gcno</code> 文件。<ul>
-<li>示例文件路径：<code>./build/CMakeFiles/simple_cpp.dir/main.cpp.gcno</code></li>
-</ul>
-</li>
-<li><strong>使用 lcov 生成 HTML 报告</strong>：<ul>
-<li>执行命令：<code>lcov --capture --directory . --output-file coverage.info</code></li>
-<li>生成 HTML：<code>genhtml coverage.info --output-directory out</code></li>
-</ul>
-</li>
-</ol>
-<blockquote>
-<p><strong>注意</strong>：</p>
-<ol>
-<li>生成的 <code>.gcda</code> 和 <code>.gcno</code> 文件不在当前路径。</li>
-<li><code>gcov</code> 解析 C++ 文件时会去掉 <code>.cpp</code> 后缀。</li>
-</ol>
-</blockquote>
-<h3 id="使用-llvm-gcov-替代-gcov"><a href="#使用-llvm-gcov-替代-gcov" class="headerlink" title="使用 llvm-gcov 替代 gcov"></a>使用 llvm-gcov 替代 gcov</h3><p>在步骤 3 中，可以使用 <code>llvm-gcov</code> 替代 <code>gcov</code>：</p>
-<ul>
-<li>命令：<code>lcov -c -d . --gcov-tool *llvm-gcov* -o coverage.info</code></li>
-</ul>
-<p><img src="/2024/10/22/20241022-code-coverage/01_lcov_report.png" alt="lcov 报告"></p>
-<h3 id="尝试使用-gcovr"><a href="#尝试使用-gcovr" class="headerlink" title="尝试使用 gcovr"></a>尝试使用 gcovr</h3><p><code>gcovr</code> 是一个 Python 封装的前端工具，比 <code>lcov</code> 更轻量。<code>lcov</code> 报告文件更详细，包含被调用的头文件。</p>
-<ul>
-<li>运行 <code>supa project</code> 时遇到错误，原因是使用了错误的 <code>gcov</code> 版本，需要使用 <code>llvm-gcov</code>。</li>
-<li>命令：<code>gcovr -r .. --html --html-details -o gcovr_report2/coverage.html --gcov-ignore-errors</code></li>
-</ul>
-<p><img src="/2024/10/22/20241022-code-coverage/02_gcovr_report.png" alt="gcovr 报告"></p>
-<h2 id="部署指南"><a href="#部署指南" class="headerlink" title="部署指南"></a>部署指南</h2><h3 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h3><ol>
-<li>本地能够只运行某（几）个用例，查看相应源码的覆盖率。</li>
-<li>基于 <code>supa</code> 项目构建相同的流程。</li>
-</ol>
-<h3 id="操作步骤"><a href="#操作步骤" class="headerlink" title="操作步骤"></a>操作步骤</h3><ol>
-<li>编译时打开覆盖率开关。</li>
-<li>运行目标程序，生成 <code>.gcda</code> 和 <code>.gcno</code> 文件。</li>
-<li>运行脚本 <code>gen_cov_report.sh</code>，生成 HTML 报告。</li>
-</ol>
-<p>通过以上步骤，您可以轻松地在 C++ 项目中生成代码覆盖率报告，并进行分析和优化。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
 
     
 
@@ -1367,6 +1243,100 @@
 <li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/145272776?utm_source=wechat_session&utm_medium=social&utm_oi=48243891240960">【保险内幕】我用在保险公司的亲身经验，告诉你保险公司到底有多…</a></li>
 <li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/150438452?utm_id=0">全面测评 152 款重疾险，选出 2020 年 6 月性价比之王</a></li>
 </ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://frank2679.github.io/2023/01/07/leader_one_year/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Frank">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fire">
+      <meta itemprop="description" content="about technology, living and fire">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Fire">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2023/01/07/leader_one_year/" class="post-title-link" itemprop="url">做 leader 一年了</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-01-07 00:40:40" itemprop="dateCreated datePublished" datetime="2023-01-07T00:40:40+08:00">2023-01-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-03-28 11:05:12" itemprop="dateModified" datetime="2023-03-28T11:05:12+08:00">2023-03-28</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <ul>
+<li><a href="#1-%E5%90%91%E4%B8%8A%E7%AE%A1%E7%90%86-vs-%E5%90%91%E4%B8%8B%E7%AE%A1%E7%90%86">1. 向上管理 vs 向下管理</a></li>
+<li><a href="#2-people-leader-vs-technique-leader">2. People leader vs Technique leader</a></li>
+<li><a href="#3-%E7%AE%A1%E7%90%86-vs-%E6%8A%80%E6%9C%AF">3. 管理 vs 技术</a></li>
+<li><a href="#4-%E7%AE%A1%E7%90%86%E9%A1%B9%E7%9B%AE-vs-%E7%AE%A1%E7%90%86%E4%BA%BA">4. 管理项目 vs 管理人</a></li>
+<li><a href="#5-%E8%90%A5%E9%80%A0%E5%81%A5%E5%BA%B7%E7%9A%84%E5%9B%A2%E9%98%9F%E6%B0%9B%E5%9B%B4%E6%9C%89%E4%B8%BA-vs-%E6%97%A0%E4%B8%BA">5. 营造健康的团队氛围，“有为” vs “无为”</a></li>
+<li><a href="#6-leader-%E6%9C%80%E5%8E%89%E5%AE%B3-vs-%E7%BB%84%E5%91%98%E6%AF%94-leader-%E5%8E%89%E5%AE%B3">6. leader 最厉害 vs 组员比 leader 厉害</a></li>
+</ul>
+<p>做 leader 是从 2021.10 月份开始，已经持续了 14 个月，渐渐有一些心得。大概有以下一些点</p>
+<h2 id="1-向上管理-vs-向下管理"><a href="#1-向上管理-vs-向下管理" class="headerlink" title="1. 向上管理 vs 向下管理"></a>1. 向上管理 vs 向下管理</h2><p>如果把工作比喻为打仗，那 leader 的职责是领好方向，并带出一支训练有素的队伍。</p>
+<p>向下管理，直觉上是主要职责，责无旁贷。需要给团队指明方向，同时还要培养团队，在工作中训练他们，关心他们，帮助他们尽快成长。从而实现个人与团队双赢的好效果。</p>
+<p>向上管理，比较容易忽视，也常常会联想到套近乎，拍马屁等负面形象。实际上并不是。<br>向上管理包括多跟老板（公司）的目标对齐，本质上我们就是在拿老板的钱<strong>帮老板解决问题</strong>，所以不要轻易觉得老板的想法很愚蠢，相反，他应该比你懂得多。如果出现刚刚的情况，更多的时候是你看错了。<br>除此，懂得如何汇报，对跟老板无缝合作也是很有裨益。</p>
+<p>我觉得向上管理，跟向下管理的精力分配应该是<strong>二八原则</strong>，前者只需要固定频率去接触以下就好，后者是要花主要精力去实践的。很遗憾，当前自己所在团队的情况基本是反过来的。老板过分对他的老板向上管理，导致对他的下属也是如此要求，过于频繁的管理行为，就像是经济学中的宏观调控，而无视<strong>市场规律</strong>，完全是<strong>计划经济</strong>，组织僵化，效率低下，内卷，劣币驱逐良币的情况时有发生。</p>
+<h2 id="2-People-leader-vs-Technique-leader"><a href="#2-People-leader-vs-Technique-leader" class="headerlink" title="2. People leader vs Technique leader"></a>2. People leader vs Technique leader</h2><p>个人觉得这是个伪命题，更多的是公司组织的一个噱头罢了。<br>leader 就是 leader，一个不能 lead 项目的 leader 不会是合格的 leader，不能 lead 人的也不会是合格的 leader。<br>可能有人会觉得术业有专攻，且八路军还有团长和政委之分，但是实际上他们就是一个主一个次而已，people leader, tech leader 就是个鸡肋，真的相信这个说辞反而是双输。</p>
+<h2 id="3-管理-vs-技术"><a href="#3-管理-vs-技术" class="headerlink" title="3. 管理 vs 技术"></a>3. 管理 vs 技术</h2><p>这个是个经典命题了，这个也可以叫做<strong>软技能 vs 硬技能</strong>，这个命题也对 individual contributor 适用。<br>要做一个 leader，两者必须兼备，只是两者之一不同人各有突出罢了，但是几乎一定是都要超过一个及格线。初阶是硬技能成长更快，对他的要求也是如此，高阶则是更看重软技能，软技能的提升也一般要更慢一些，比如包括与人沟通、格局、善良、自我要求高等，这些品质也更看天意，要改变相对更困难一些。</p>
+<h2 id="4-管理项目-vs-管理人"><a href="#4-管理项目-vs-管理人" class="headerlink" title="4. 管理项目 vs 管理人"></a>4. 管理项目 vs 管理人</h2><p>管理项目，主体是项目，它有一套比较健全的方法论和流程，以及工具，比如 JIRA，conf，git，teams，WBS 等。相对比较简单。</p>
+<p>管理人，复杂多了，职场沟通有各种“套路”，但是套路的目的是为了不套路，真诚是最厉害的套路。坚持<strong>不要太把自己当人，不要太不把别人当人</strong>就好了。</p>
+<h2 id="5-营造健康的团队氛围，“有为”-vs-“无为”"><a href="#5-营造健康的团队氛围，“有为”-vs-“无为”" class="headerlink" title="5. 营造健康的团队氛围，“有为” vs “无为”"></a>5. 营造健康的团队氛围，“有为” vs “无为”</h2><p>团队氛围管你是“有为”，“无为”，都会形成。但是一个好的，健康的氛围，绝对是有花心思的地方的。<br>最近看到宁高宁说，一个人只要是善良，对人好，对自己要求高，他在一个地方待个两年，他身边自然会形成一个好的氛围。这是某种“无为”，但是实际上对自己要求高，为此付出努力是某种“有为”。<br>除此，还有真的有为，你需要“显式”地去营造氛围，这种要小心，因为很容易用力过猛，弄巧成拙。</p>
+<h2 id="6-leader-最厉害-vs-组员比-leader-厉害"><a href="#6-leader-最厉害-vs-组员比-leader-厉害" class="headerlink" title="6. leader 最厉害 vs 组员比 leader 厉害"></a>6. leader 最厉害 vs 组员比 leader 厉害</h2><p>leader 是团队的天花板，这句话我更愿意看成是 leader 对自己的高要求，要尽量通过提升自己来抬升团队的成长空间。<br>但是实际上肯定是有组员在工作的某些方面超过 leader 的，这种应该鼓励他的长处，而不是小家子气，担心功高盖主。leader 要 lead 的将士们的精神，而不是技能。</p>
 
       
     </div>
