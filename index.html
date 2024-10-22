@@ -118,7 +118,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-count">10</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -241,235 +241,6 @@
 </ol>
 <p>通过以上步骤，您可以轻松地在 C++ 项目中生成代码覆盖率报告，并进行分析和优化。</p>
 
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://frank2679.github.io/2023/09/14/202309-02-npi/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Frank">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Fire">
-      <meta itemprop="description" content="about technology, living and fire">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Fire">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/09/14/202309-02-npi/" class="post-title-link" itemprop="url">npi</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2023-09-14 16:37:49" itemprop="dateCreated datePublished" datetime="2023-09-14T16:37:49+08:00">2023-09-14</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-10-22 19:18:02" itemprop="dateModified" datetime="2024-10-22T19:18:02+08:00">2024-10-22</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>GPT</p>
-<p>generated pre-trained transformer</p>
-<p><a target="_blank" rel="noopener" href="https://conf01.birentech.com/display/BIL/Technical+sharing">Technical sharing - SLO(Libraries) - Confluence (birentech.com)</a></p>
-<p>分布式训练</p>
-<ol>
-<li>DP 数据并行</li>
-<li>TP tensor 并行</li>
-<li>PP pipeline 并行</li>
-</ol>
-<p>ZeRO</p>
-<p>微软，通信量换显存空间</p>
-<h3 id="大模型训练的挑战"><a href="#大模型训练的挑战" class="headerlink" title="大模型训练的挑战"></a>大模型训练的挑战</h3><ul>
-<li>软硬协同（算子优化，通信）</li>
-<li>计算</li>
-</ul>
-<p><img src="/image/202309-02-npi/Snipaste_2023-09-14_19-45-37.png" alt="img"></p>
-<p>优化策略</p>
-<ul>
-<li>算子融合，优化主要模型结构<ul>
-<li>self attention</li>
-<li>crossentropy</li>
-</ul>
-</li>
-<li>现存占用分析</li>
-</ul>
-<p>疑问</p>
-<ol>
-<li>算子层面不需要考虑卡间分布式</li>
-</ol>
-<hr>
-<p><img src="/./202309-02-npi/talker.png"></p>
-<h3 id="CIM-存算一体"><a href="#CIM-存算一体" class="headerlink" title="CIM 存算一体"></a>CIM 存算一体</h3><p><img src="/202309-02-npi/transformer.png"></p>
-<p>大模型每年成长 10 倍算力需求</p>
-<p>sparsity 在越大的模型中越明显</p>
-<p>相近的词相关性越大</p>
-<p>剪枝</p>
-<h4 id="方案"><a href="#方案" class="headerlink" title="方案"></a>方案</h4><p>1 sparse to dense</p>
-<ul>
-<li>butterfly</li>
-</ul>
-<p>3 attention core</p>
-<ul>
-<li>local attention and QK-sharing</li>
-</ul>
-<p>linear 是 hotspot ，向量乘矩阵</p>
-<h3 id="PIM-Process-in-Memory"><a href="#PIM-Process-in-Memory" class="headerlink" title="PIM Process-in-Memory"></a>PIM Process-in-Memory</h3><p>对比 CIM，界限不明确</p>
-<p>PIM 在同一个 die，松耦合</p>
-<p>CIM 是一个 cross bar，同一个 cell，紧耦合</p>
-<h3 id="Others"><a href="#Others" class="headerlink" title="Others"></a>Others</h3><p>搞软硬设计貌似挺有意思的，可以多了解一下。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://frank2679.github.io/2023/09/07/202309-01-gpu-arch/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Frank">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Fire">
-      <meta itemprop="description" content="about technology, living and fire">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Fire">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/09/07/202309-01-gpu-arch/" class="post-title-link" itemprop="url">GPU Architecture</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2023-09-07 10:56:59" itemprop="dateCreated datePublished" datetime="2023-09-07T10:56:59+08:00">2023-09-07</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-10-22 19:18:02" itemprop="dateModified" datetime="2024-10-22T19:18:02+08:00">2024-10-22</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>问题</p>
-<ul>
-<li>TC size 不改，也不敢改，这是核心部分，软件代码实现过分依赖该 size，算法实现也很大程度依赖 TC size，改了我们的软件栈（sulib，compiler）可能都要重写</li>
-</ul>
-<h2 id="关键模块"><a href="#关键模块" class="headerlink" title="关键模块"></a>关键模块</h2><h3 id="CP"><a href="#CP" class="headerlink" title="CP"></a>CP</h3><h3 id="EU"><a href="#EU" class="headerlink" title="EU"></a>EU</h3><ul>
-<li>4 EU</li>
-<li>EU<ul>
-<li>ALU</li>
-<li>更多 TLR，64KB TLR, 4KB WSR, 16 Warps</li>
-<li>cwarp 概念，改进版</li>
-<li>mmv, 4*32 fp16 fmad</li>
-</ul>
-</li>
-</ul>
-<h3 id="L1C-x2F-GSM"><a href="#L1C-x2F-GSM" class="headerlink" title="L1C&#x2F;GSM"></a>L1C&#x2F;GSM</h3><p>* </p>
-<h3 id="SPC"><a href="#SPC" class="headerlink" title="SPC"></a>SPC</h3><ul>
-<li>对标 GPC （2倍 spc）</li>
-<li>GPC：TC 有点像是 CU level</li>
-<li>Remove Tmode，使用 cluster style residential kernel launch，后者更靠近真正的通用计算</li>
-<li>TC size，one TC one SPC</li>
-<li>No hardwired multicasting (有 walk around)</li>
-<li>GIB in GSM</li>
-</ul>
-<h3 id="TC"><a href="#TC" class="headerlink" title="TC"></a>TC</h3><h3 id="Tensor-format"><a href="#Tensor-format" class="headerlink" title="Tensor format"></a>Tensor format</h3><ul>
-<li>TF32+ （BF24）想去掉</li>
-<li>TF32</li>
-<li>FP16&#x2F;BF16</li>
-<li>FP8&#x2F;int8&#x2F;int4</li>
-</ul>
-<p>大模型没有 sparsity，graphic chip 压缩</p>
-<h3 id="L2C"><a href="#L2C" class="headerlink" title="L2C"></a>L2C</h3>
       
     </div>
 
@@ -1384,9 +1155,181 @@
 
 
 
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/2/"><i class="fa fa-angle-right"></i></a>
-  </nav>
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://frank2679.github.io/2023/01/07/leader_one_year/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Frank">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fire">
+      <meta itemprop="description" content="about technology, living and fire">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Fire">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2023/01/07/leader_one_year/" class="post-title-link" itemprop="url">做 leader 一年了</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-01-07 00:40:40" itemprop="dateCreated datePublished" datetime="2023-01-07T00:40:40+08:00">2023-01-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-03-28 11:05:12" itemprop="dateModified" datetime="2023-03-28T11:05:12+08:00">2023-03-28</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <ul>
+<li><a href="#1-%E5%90%91%E4%B8%8A%E7%AE%A1%E7%90%86-vs-%E5%90%91%E4%B8%8B%E7%AE%A1%E7%90%86">1. 向上管理 vs 向下管理</a></li>
+<li><a href="#2-people-leader-vs-technique-leader">2. People leader vs Technique leader</a></li>
+<li><a href="#3-%E7%AE%A1%E7%90%86-vs-%E6%8A%80%E6%9C%AF">3. 管理 vs 技术</a></li>
+<li><a href="#4-%E7%AE%A1%E7%90%86%E9%A1%B9%E7%9B%AE-vs-%E7%AE%A1%E7%90%86%E4%BA%BA">4. 管理项目 vs 管理人</a></li>
+<li><a href="#5-%E8%90%A5%E9%80%A0%E5%81%A5%E5%BA%B7%E7%9A%84%E5%9B%A2%E9%98%9F%E6%B0%9B%E5%9B%B4%E6%9C%89%E4%B8%BA-vs-%E6%97%A0%E4%B8%BA">5. 营造健康的团队氛围，“有为” vs “无为”</a></li>
+<li><a href="#6-leader-%E6%9C%80%E5%8E%89%E5%AE%B3-vs-%E7%BB%84%E5%91%98%E6%AF%94-leader-%E5%8E%89%E5%AE%B3">6. leader 最厉害 vs 组员比 leader 厉害</a></li>
+</ul>
+<p>做 leader 是从 2021.10 月份开始，已经持续了 14 个月，渐渐有一些心得。大概有以下一些点</p>
+<h2 id="1-向上管理-vs-向下管理"><a href="#1-向上管理-vs-向下管理" class="headerlink" title="1. 向上管理 vs 向下管理"></a>1. 向上管理 vs 向下管理</h2><p>如果把工作比喻为打仗，那 leader 的职责是领好方向，并带出一支训练有素的队伍。</p>
+<p>向下管理，直觉上是主要职责，责无旁贷。需要给团队指明方向，同时还要培养团队，在工作中训练他们，关心他们，帮助他们尽快成长。从而实现个人与团队双赢的好效果。</p>
+<p>向上管理，比较容易忽视，也常常会联想到套近乎，拍马屁等负面形象。实际上并不是。<br>向上管理包括多跟老板（公司）的目标对齐，本质上我们就是在拿老板的钱<strong>帮老板解决问题</strong>，所以不要轻易觉得老板的想法很愚蠢，相反，他应该比你懂得多。如果出现刚刚的情况，更多的时候是你看错了。<br>除此，懂得如何汇报，对跟老板无缝合作也是很有裨益。</p>
+<p>我觉得向上管理，跟向下管理的精力分配应该是<strong>二八原则</strong>，前者只需要固定频率去接触以下就好，后者是要花主要精力去实践的。很遗憾，当前自己所在团队的情况基本是反过来的。老板过分对他的老板向上管理，导致对他的下属也是如此要求，过于频繁的管理行为，就像是经济学中的宏观调控，而无视<strong>市场规律</strong>，完全是<strong>计划经济</strong>，组织僵化，效率低下，内卷，劣币驱逐良币的情况时有发生。</p>
+<h2 id="2-People-leader-vs-Technique-leader"><a href="#2-People-leader-vs-Technique-leader" class="headerlink" title="2. People leader vs Technique leader"></a>2. People leader vs Technique leader</h2><p>个人觉得这是个伪命题，更多的是公司组织的一个噱头罢了。<br>leader 就是 leader，一个不能 lead 项目的 leader 不会是合格的 leader，不能 lead 人的也不会是合格的 leader。<br>可能有人会觉得术业有专攻，且八路军还有团长和政委之分，但是实际上他们就是一个主一个次而已，people leader, tech leader 就是个鸡肋，真的相信这个说辞反而是双输。</p>
+<h2 id="3-管理-vs-技术"><a href="#3-管理-vs-技术" class="headerlink" title="3. 管理 vs 技术"></a>3. 管理 vs 技术</h2><p>这个是个经典命题了，这个也可以叫做<strong>软技能 vs 硬技能</strong>，这个命题也对 individual contributor 适用。<br>要做一个 leader，两者必须兼备，只是两者之一不同人各有突出罢了，但是几乎一定是都要超过一个及格线。初阶是硬技能成长更快，对他的要求也是如此，高阶则是更看重软技能，软技能的提升也一般要更慢一些，比如包括与人沟通、格局、善良、自我要求高等，这些品质也更看天意，要改变相对更困难一些。</p>
+<h2 id="4-管理项目-vs-管理人"><a href="#4-管理项目-vs-管理人" class="headerlink" title="4. 管理项目 vs 管理人"></a>4. 管理项目 vs 管理人</h2><p>管理项目，主体是项目，它有一套比较健全的方法论和流程，以及工具，比如 JIRA，conf，git，teams，WBS 等。相对比较简单。</p>
+<p>管理人，复杂多了，职场沟通有各种“套路”，但是套路的目的是为了不套路，真诚是最厉害的套路。坚持<strong>不要太把自己当人，不要太不把别人当人</strong>就好了。</p>
+<h2 id="5-营造健康的团队氛围，“有为”-vs-“无为”"><a href="#5-营造健康的团队氛围，“有为”-vs-“无为”" class="headerlink" title="5. 营造健康的团队氛围，“有为” vs “无为”"></a>5. 营造健康的团队氛围，“有为” vs “无为”</h2><p>团队氛围管你是“有为”，“无为”，都会形成。但是一个好的，健康的氛围，绝对是有花心思的地方的。<br>最近看到宁高宁说，一个人只要是善良，对人好，对自己要求高，他在一个地方待个两年，他身边自然会形成一个好的氛围。这是某种“无为”，但是实际上对自己要求高，为此付出努力是某种“有为”。<br>除此，还有真的有为，你需要“显式”地去营造氛围，这种要小心，因为很容易用力过猛，弄巧成拙。</p>
+<h2 id="6-leader-最厉害-vs-组员比-leader-厉害"><a href="#6-leader-最厉害-vs-组员比-leader-厉害" class="headerlink" title="6. leader 最厉害 vs 组员比 leader 厉害"></a>6. leader 最厉害 vs 组员比 leader 厉害</h2><p>leader 是团队的天花板，这句话我更愿意看成是 leader 对自己的高要求，要尽量通过提升自己来抬升团队的成长空间。<br>但是实际上肯定是有组员在工作的某些方面超过 leader 的，这种应该鼓励他的长处，而不是小家子气，担心功高盖主。leader 要 lead 的将士们的精神，而不是技能。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://frank2679.github.io/2023/01/02/hello-world/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Frank">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fire">
+      <meta itemprop="description" content="about technology, living and fire">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Fire">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2023/01/02/hello-world/" class="post-title-link" itemprop="url">Hello World</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-01-02 15:49:28" itemprop="dateCreated datePublished" datetime="2023-01-02T15:49:28+08:00">2023-01-02</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
 
 </div>
   </main>
