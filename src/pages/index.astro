@@ -1,0 +1,417 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import PostCard from '../components/PostCard.astro';
+import { getCollection } from 'astro:content';
+
+const allPosts = await getCollection('blog');
+const recentPosts = allPosts
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 4);
+
+const skills = [
+  { label: 'C++ / C', level: 'Expert' },
+  { label: 'CUDA', level: 'Expert' },
+  { label: 'Python', level: 'Proficient' },
+  { label: 'BLAS / GEMM', level: 'Expert' },
+  { label: 'Performance Optimization', level: 'Expert' },
+  { label: 'Deep Learning', level: 'Proficient' },
+  { label: 'CMake / Make', level: 'Proficient' },
+  { label: 'Git / CI/CD', level: 'Proficient' },
+];
+
+const featured = [
+  {
+    title: 'BLAS Library from Scratch',
+    desc: 'Built production-grade BLAS acceleration library on GPGPU, achieving A100-level performance on LLMs (Qwen, Llama2, GPT series).',
+    tags: ['C++', 'CUDA', 'BLAS', 'LLM'],
+    href: '/projects',
+  },
+  {
+    title: 'CUTLASS Architecture Port',
+    desc: 'Porting NVIDIA CUTLASS framework and CuTe layout algebra to new chip architecture for generalized GEMM operations.',
+    tags: ['CUTLASS', 'C++', 'Architecture'],
+    href: '/projects',
+  },
+  {
+    title: 'DNN Framework Development',
+    desc: 'Developed deep learning framework with precision verification, self-defined operator/graph expression via YAML.',
+    tags: ['Python', 'C++', 'DNN', 'PyTorch'],
+    href: '/projects',
+  },
+];
+---
+
+<BaseLayout title="Frank Young — HPC Engineer">
+  <Nav />
+
+  <main>
+    <!-- Hero -->
+    <section class="hero">
+      <div class="container">
+        <div class="hero-badge">
+          <span class="dot"></span>
+          <span>Available for interesting opportunities</span>
+        </div>
+        <h1 class="hero-name">Frank Young</h1>
+        <p class="hero-title">High-Performance Computing Engineer</p>
+        <p class="hero-desc">
+          8+ years building AI acceleration infrastructure — BLAS libraries, GEMM optimizations,
+          and DNN frameworks on heterogeneous platforms. Currently at
+          <a href="https://damo.alibaba.com" target="_blank" rel="noopener noreferrer">Alibaba DAMO Academy</a>.
+        </p>
+        <div class="hero-actions">
+          <a href="/about" class="btn btn-primary">View Resume</a>
+          <a href="/projects" class="btn btn-ghost">See Projects</a>
+          <a href="https://github.com/frank2679" target="_blank" rel="noopener noreferrer" class="btn btn-ghost">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 6px;">
+              <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+            </svg>
+            GitHub
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Skills -->
+    <section class="section">
+      <div class="container">
+        <h2 class="section-label">// Skills</h2>
+        <div class="skills-grid">
+          {skills.map(({ label, level }) => (
+            <div class="skill-item">
+              <span class="skill-name">{label}</span>
+              <span class:list={['skill-level', level.toLowerCase().replace(' ', '-')]}>{level}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured Projects -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-label">// Featured Projects</h2>
+          <a href="/projects" class="see-all">See all →</a>
+        </div>
+        <div class="projects-grid">
+          {featured.map(({ title, desc, tags, href }) => (
+            <a href={href} class="featured-card">
+              <h3>{title}</h3>
+              <p>{desc}</p>
+              <div class="tags">
+                {tags.map((t) => <span class="tag">{t}</span>)}
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Recent Posts -->
+    {recentPosts.length > 0 && (
+      <section class="section">
+        <div class="container">
+          <div class="section-header">
+            <h2 class="section-label">// Recent Posts</h2>
+            <a href="/blog" class="see-all">All posts →</a>
+          </div>
+          <div class="posts-list">
+            {recentPosts.map((post) => (
+              <PostCard
+                title={post.data.title}
+                date={post.data.date}
+                slug={post.id}
+                tags={post.data.tags}
+                description={post.data.description}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
+
+    <!-- Contact -->
+    <section class="section contact-section">
+      <div class="container">
+        <div class="contact-box">
+          <h2>Get in Touch</h2>
+          <p>Interested in collaborating on high-performance computing, AI infrastructure, or just want to chat about technology?</p>
+          <a href="mailto:2679frank@gmail.com" class="btn btn-primary">2679frank@gmail.com</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  /* Hero */
+  .hero {
+    padding: 5rem 0 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -200px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, var(--accent)0a 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.35rem 0.9rem;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .hero-name {
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-title {
+    font-size: 1.25rem;
+    color: var(--accent);
+    font-family: var(--font-mono);
+    margin-bottom: 1.25rem;
+    font-weight: 400;
+  }
+
+  .hero-desc {
+    font-size: 1.05rem;
+    color: var(--text-secondary);
+    max-width: 580px;
+    line-height: 1.75;
+    margin-bottom: 2rem;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.6rem 1.25rem;
+    border-radius: var(--radius);
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #0a0a0f;
+  }
+
+  .btn-primary:hover {
+    background: var(--accent-hover);
+    color: #0a0a0f;
+    transform: translateY(-1px);
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+  }
+
+  .btn-ghost:hover {
+    border-color: var(--accent)55;
+    color: var(--text-primary);
+    background: var(--bg-card);
+  }
+
+  /* Sections */
+  .section {
+    padding: 3rem 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .section-label {
+    font-size: 0.85rem;
+    font-family: var(--font-mono);
+    color: var(--accent);
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+  }
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .section-header .section-label {
+    margin-bottom: 0;
+  }
+
+  .see-all {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    transition: color 0.2s;
+  }
+
+  .see-all:hover {
+    color: var(--accent);
+  }
+
+  /* Skills */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 0.6rem;
+  }
+
+  .skill-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0.6rem 0.9rem;
+    transition: border-color 0.2s;
+  }
+
+  .skill-item:hover {
+    border-color: var(--accent)44;
+  }
+
+  .skill-name {
+    font-size: 0.875rem;
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+
+  .skill-level {
+    font-size: 0.72rem;
+    font-family: var(--font-mono);
+    padding: 0.15em 0.5em;
+    border-radius: 4px;
+  }
+
+  .skill-level.expert {
+    background: var(--accent)22;
+    color: var(--accent);
+  }
+
+  .skill-level.proficient {
+    background: #6e6e8a22;
+    color: var(--text-secondary);
+  }
+
+  /* Featured Projects */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem;
+  }
+
+  .featured-card {
+    display: block;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .featured-card:hover {
+    border-color: var(--accent)55;
+    transform: translateY(-2px);
+  }
+
+  .featured-card h3 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.6rem;
+  }
+
+  .featured-card p {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    line-height: 1.65;
+    margin-bottom: 1rem;
+  }
+
+  .tags {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+  }
+
+  /* Posts */
+  .posts-list {
+    border-top: 1px solid var(--border);
+  }
+
+  /* Contact */
+  .contact-section {
+    margin-bottom: 2rem;
+  }
+
+  .contact-box {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 2.5rem;
+    text-align: center;
+  }
+
+  .contact-box h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .contact-box p {
+    color: var(--text-secondary);
+    max-width: 480px;
+    margin: 0 auto 1.5rem;
+  }
+</style>
