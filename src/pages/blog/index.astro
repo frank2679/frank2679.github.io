@@ -1,0 +1,98 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+import PostCard from '../../components/PostCard.astro';
+import { getCollection } from 'astro:content';
+
+const allPosts = await getCollection('blog');
+const posts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+// Collect all unique tags
+const allTags = [...new Set(posts.flatMap((p) => p.data.tags))].sort();
+---
+
+<BaseLayout
+  title="Blog — Frank Young"
+  description="Technical writing on high-performance computing, C++, AI acceleration, and engineering."
+>
+  <Nav />
+
+  <main class="container">
+    <section class="page-header">
+      <h1>Blog</h1>
+      <p class="subtitle">
+        Notes on HPC, C++, AI acceleration, and life. Mostly in Chinese (中文).
+      </p>
+    </section>
+
+    {allTags.length > 0 && (
+      <div class="tag-bar">
+        {allTags.map((tag) => (
+          <span class="tag">{tag}</span>
+        ))}
+      </div>
+    )}
+
+    <div class="posts-list">
+      {posts.map((post) => (
+        <PostCard
+          title={post.data.title}
+          date={post.data.date}
+          slug={post.id}
+          tags={post.data.tags}
+          description={post.data.description}
+        />
+      ))}
+    </div>
+
+    {posts.length === 0 && (
+      <p class="empty">No posts yet. Check back soon.</p>
+    )}
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  main {
+    padding-top: 3rem;
+    padding-bottom: 4rem;
+  }
+
+  .page-header {
+    margin-bottom: 2rem;
+  }
+
+  h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    margin-bottom: 0.5rem;
+  }
+
+  .subtitle {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    margin: 0;
+  }
+
+  .tag-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .posts-list {
+    border-top: 1px solid var(--border);
+  }
+
+  .empty {
+    color: var(--text-muted);
+    text-align: center;
+    padding: 3rem 0;
+  }
+</style>

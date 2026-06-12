@@ -1,0 +1,136 @@
+---
+interface Props {
+  title: string;
+  period: string;
+  description: string;
+  tags: string[];
+  highlights?: string[];
+  link?: string;
+}
+
+const { title, period, description, tags, highlights = [], link } = Astro.props;
+---
+
+<article class="project-card">
+  <div class="card-header">
+    <div>
+      <h3 class="card-title">
+        {link ? <a href={link} target="_blank" rel="noopener noreferrer">{title}</a> : title}
+      </h3>
+      <span class="period">{period}</span>
+    </div>
+    {link && (
+      <a href={link} target="_blank" rel="noopener noreferrer" class="ext-link" aria-label="External link">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+          <polyline points="15 3 21 3 21 9"/>
+          <line x1="10" y1="14" x2="21" y2="3"/>
+        </svg>
+      </a>
+    )}
+  </div>
+
+  <p class="desc">{description}</p>
+
+  {highlights.length > 0 && (
+    <ul class="highlights">
+      {highlights.map((h) => <li>{h}</li>)}
+    </ul>
+  )}
+
+  <div class="tags">
+    {tags.map((tag) => <span class="tag">{tag}</span>)}
+  </div>
+</article>
+
+<style>
+  .project-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .project-card:hover {
+    border-color: var(--accent)55;
+    transform: translateY(-2px);
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.75rem;
+    gap: 1rem;
+  }
+
+  .card-title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+  }
+
+  .card-title a {
+    color: var(--text-primary);
+  }
+
+  .card-title a:hover {
+    color: var(--accent);
+  }
+
+  .period {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    font-family: var(--font-mono);
+  }
+
+  .ext-link {
+    color: var(--text-muted);
+    flex-shrink: 0;
+    transition: color 0.2s;
+  }
+
+  .ext-link:hover {
+    color: var(--accent);
+  }
+
+  .desc {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    line-height: 1.65;
+  }
+
+  .highlights {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .highlights li {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    padding-left: 1rem;
+    position: relative;
+  }
+
+  .highlights li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-size: 0.75rem;
+    top: 0.15em;
+  }
+
+  .tags {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+  }
+</style>

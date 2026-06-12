@@ -1,0 +1,97 @@
+---
+const currentPath = Astro.url.pathname;
+
+const links = [
+  { href: '/', label: 'Home' },
+  { href: '/about', label: 'About' },
+  { href: '/projects', label: 'Projects' },
+  { href: '/blog', label: 'Blog' },
+];
+---
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="logo">Frank Young</a>
+    <ul class="nav-links">
+      {links.map(({ href, label }) => (
+        <li>
+          <a
+            href={href}
+            class:list={['nav-link', { active: currentPath === href || (href !== '/' && currentPath.startsWith(href)) }]}
+          >
+            {label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</nav>
+
+<style>
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--bg-primary)cc;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-inner {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+  }
+
+  .logo:hover {
+    color: var(--accent);
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 0.25rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .nav-link {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 0.4rem 0.75rem;
+    border-radius: var(--radius);
+    transition: color 0.2s, background 0.2s;
+  }
+
+  .nav-link:hover {
+    color: var(--text-primary);
+    background: var(--bg-hover);
+  }
+
+  .nav-link.active {
+    color: var(--accent);
+  }
+
+  @media (max-width: 480px) {
+    .logo {
+      font-size: 0.95rem;
+    }
+    .nav-link {
+      padding: 0.4rem 0.5rem;
+      font-size: 0.85rem;
+    }
+  }
+</style>

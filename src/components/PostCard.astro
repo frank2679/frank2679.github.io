@@ -1,0 +1,89 @@
+---
+interface Props {
+  title: string;
+  date: Date;
+  slug: string;
+  tags?: string[];
+  description?: string;
+}
+
+const { title, date, slug, tags = [], description } = Astro.props;
+
+const formatted = date.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+});
+---
+
+<article class="post-card">
+  <div class="post-meta">
+    <time datetime={date.toISOString()}>{formatted}</time>
+    {tags.length > 0 && (
+      <div class="tags">
+        {tags.slice(0, 3).map((tag) => (
+          <span class="tag">{tag}</span>
+        ))}
+      </div>
+    )}
+  </div>
+  <h3 class="post-title">
+    <a href={`/blog/${slug}`}>{title}</a>
+  </h3>
+  {description && <p class="post-desc">{description}</p>}
+</article>
+
+<style>
+  .post-card {
+    padding: 1.5rem 0;
+    border-bottom: 1px solid var(--border);
+    transition: padding-left 0.2s;
+  }
+
+  .post-card:hover {
+    padding-left: 0.5rem;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  time {
+    color: var(--text-muted);
+    font-size: 0.83rem;
+    font-family: var(--font-mono);
+  }
+
+  .tags {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+  }
+
+  .post-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    line-height: 1.4;
+    margin-bottom: 0.4rem;
+  }
+
+  .post-title a {
+    color: var(--text-primary);
+    transition: color 0.2s;
+  }
+
+  .post-title a:hover {
+    color: var(--accent);
+  }
+
+  .post-desc {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin: 0;
+    line-height: 1.6;
+  }
+</style>
