@@ -316,28 +316,15 @@ import Footer from '../components/Footer.astro';
   }
 
   .timeline-item {
-    display: grid;
-    grid-template-columns: 1px 1fr;
-    gap: 0 1.5rem;
     position: relative;
-  }
-
-  .timeline-marker {
-    width: 10px;
-    height: 10px;
-    background: var(--accent);
-    border-radius: 50%;
-    position: absolute;
-    left: -4px;
-    top: 6px;
-    box-shadow: 0 0 0 3px var(--accent)22;
+    padding-left: 2rem;
   }
 
   .timeline-item::before {
     content: '';
     position: absolute;
-    left: 0;
-    top: 0;
+    left: 4px;
+    top: 14px;
     bottom: -2.5rem;
     width: 1px;
     background: var(--border);
@@ -347,8 +334,19 @@ import Footer from '../components/Footer.astro';
     display: none;
   }
 
+  .timeline-marker {
+    width: 10px;
+    height: 10px;
+    background: var(--accent);
+    border-radius: 50%;
+    position: absolute;
+    left: 0;
+    top: 6px;
+    box-shadow: 0 0 0 3px var(--accent)22;
+  }
+
   .timeline-content {
-    padding-left: 1.5rem;
+    width: 100%;
   }
 
   .job-header {
