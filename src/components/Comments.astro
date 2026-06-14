@@ -1,0 +1,34 @@
+---
+// To activate: fill in REPO_ID and CATEGORY_ID from https://giscus.app
+// Prerequisites: enable GitHub Discussions + install Giscus app on the repo
+const REPO_ID = "YOUR_REPO_ID";
+const CATEGORY_ID = "YOUR_CATEGORY_ID";
+---
+
+<section class="comments">
+  <script
+    src="https://giscus.app/client.js"
+    data-repo="frank2679/frank2679.github.io"
+    data-repo-id={REPO_ID}
+    data-category="Comments"
+    data-category-id={CATEGORY_ID}
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="top"
+    data-theme="dark"
+    data-lang="zh-CN"
+    data-loading="lazy"
+    crossorigin="anonymous"
+    async
+  ></script>
+</section>
+
+<style>
+  .comments {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+  }
+</style>
