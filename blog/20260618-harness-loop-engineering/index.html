@@ -1,0 +1,628 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v5.18.2"><title>Harness Engineering 与 Loop Engineering 深度调研报告 — Frank Young</title><meta name="description" content="系统梳理 Harness Engineering 与 Loop Engineering 的定义、架构、关系，以及以 Claude Code 为例的工程实践，附完整学习路径。"><link rel="canonical" href="https://frank2679.github.io/blog/20260618-harness-loop-engineering/"><!-- Open Graph --><meta property="og:type" content="website"><meta property="og:url" content="https://frank2679.github.io/blog/20260618-harness-loop-engineering/"><meta property="og:title" content="Harness Engineering 与 Loop Engineering 深度调研报告 — Frank Young"><meta property="og:description" content="系统梳理 Harness Engineering 与 Loop Engineering 的定义、架构、关系，以及以 Claude Code 为例的工程实践，附完整学习路径。"><meta property="og:image" content="https://frank2679.github.io/og.png"><!-- Twitter --><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Harness Engineering 与 Loop Engineering 深度调研报告 — Frank Young"><meta name="twitter:description" content="系统梳理 Harness Engineering 与 Loop Engineering 的定义、架构、关系，以及以 Claude Code 为例的工程实践，附完整学习路径。"><meta name="twitter:image" content="https://frank2679.github.io/og.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"><style>:root{--bg-primary: #0a0a0f;--bg-secondary: #111118;--bg-card: #16161f;--bg-hover: #1e1e2a;--border: #2a2a3a;--accent: #00d4aa;--accent-dim: #00d4aa22;--accent-hover: #00efbf;--text-primary: #e2e8f0;--text-secondary: #8892a4;--text-muted: #555870;--code-bg: #1a1a25;--radius: 8px;--radius-lg: 16px;--max-w: 860px;--font-sans: "Inter", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;--font-mono: "JetBrains Mono", "Fira Code", "Cascadia Code", monospace}*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}body{background:var(--bg-primary);color:var(--text-primary);font-family:var(--font-sans);font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}a{color:var(--accent);text-decoration:none;transition:color .2s}a:hover{color:var(--accent-hover)}img{max-width:100%;height:auto}code{font-family:var(--font-mono);font-size:.875em;background:var(--code-bg);padding:.15em .4em;border-radius:4px;color:var(--accent)}pre{background:var(--code-bg);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem 1.5rem;overflow-x:auto;margin:1.5rem 0}pre code{background:none;padding:0;color:var(--text-primary);font-size:.875rem}h1,h2,h3,h4,h5,h6{color:var(--text-primary);line-height:1.3;font-weight:600}p{margin-bottom:1rem}ul,ol{padding-left:1.5rem;margin-bottom:1rem}li{margin-bottom:.25rem}hr{border:none;border-top:1px solid var(--border);margin:2rem 0}blockquote{border-left:3px solid var(--accent);padding-left:1rem;color:var(--text-secondary);margin:1.5rem 0;font-style:italic}table{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:.9rem}th,td{padding:.75rem 1rem;border:1px solid var(--border);text-align:left}th{background:var(--bg-card);color:var(--accent);font-weight:600}tr:nth-child(2n){background:var(--bg-secondary)}.container{max-width:var(--max-w);margin:0 auto;padding:0 1.5rem}.tag{display:inline-block;background:var(--accent-dim);color:var(--accent);border:1px solid var(--accent)33;padding:.2em .65em;border-radius:4px;font-size:.78rem;font-family:var(--font-mono);font-weight:500;transition:background .2s}.tag:hover{background:var(--accent-dim);color:var(--accent-hover)}@media(max-width:640px){body{font-size:15px}}nav[data-astro-cid-dmqpwcec]{position:sticky;top:0;z-index:100;background:var(--bg-primary)cc;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}.nav-inner[data-astro-cid-dmqpwcec]{max-width:var(--max-w);margin:0 auto;padding:0 1.5rem;height:60px;display:flex;align-items:center;justify-content:space-between}.logo[data-astro-cid-dmqpwcec]{font-weight:600;font-size:1.05rem;color:var(--text-primary);letter-spacing:-.02em}.logo[data-astro-cid-dmqpwcec]:hover{color:var(--accent)}.nav-links[data-astro-cid-dmqpwcec]{display:flex;gap:.25rem;list-style:none;padding:0;margin:0}.nav-link[data-astro-cid-dmqpwcec]{color:var(--text-secondary);font-size:.9rem;font-weight:500;padding:.4rem .75rem;border-radius:var(--radius);transition:color .2s,background .2s}.nav-link[data-astro-cid-dmqpwcec]:hover{color:var(--text-primary);background:var(--bg-hover)}.nav-link[data-astro-cid-dmqpwcec].active{color:var(--accent)}@media(max-width:480px){.logo[data-astro-cid-dmqpwcec]{font-size:.95rem}.nav-link[data-astro-cid-dmqpwcec]{padding:.4rem .5rem;font-size:.85rem}}footer[data-astro-cid-sz7xmlte]{border-top:1px solid var(--border);margin-top:6rem;padding:2rem 0}.footer-inner[data-astro-cid-sz7xmlte]{max-width:var(--max-w);margin:0 auto;padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between}.copyright[data-astro-cid-sz7xmlte]{color:var(--text-muted);font-size:.875rem;margin:0}.footer-links[data-astro-cid-sz7xmlte]{display:flex;gap:1rem;align-items:center}.footer-links[data-astro-cid-sz7xmlte] a[data-astro-cid-sz7xmlte]{color:var(--text-muted);display:flex;align-items:center;transition:color .2s}.footer-links[data-astro-cid-sz7xmlte] a[data-astro-cid-sz7xmlte]:hover{color:var(--accent)}
+main[data-astro-cid-4sn4zg3r]{padding-top:3rem;padding-bottom:4rem}.post-header[data-astro-cid-4sn4zg3r]{margin-bottom:3rem;padding-bottom:2rem;border-bottom:1px solid var(--border)}.post-meta[data-astro-cid-4sn4zg3r]{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;gap:1rem;flex-wrap:wrap}.back-link[data-astro-cid-4sn4zg3r]{display:inline-flex;align-items:center;gap:.35rem;color:var(--text-muted);font-size:.875rem;transition:color .2s}.back-link[data-astro-cid-4sn4zg3r]:hover{color:var(--accent)}time[data-astro-cid-4sn4zg3r]{color:var(--text-muted);font-size:.83rem;font-family:var(--font-mono)}h1[data-astro-cid-4sn4zg3r]{font-size:clamp(1.75rem,4vw,2.5rem);font-weight:700;letter-spacing:-.02em;line-height:1.25;margin-bottom:1rem}.tags[data-astro-cid-4sn4zg3r]{display:flex;flex-wrap:wrap;gap:.4rem}.prose[data-astro-cid-4sn4zg3r]{color:var(--text-secondary);line-height:1.8;font-size:1rem}.prose[data-astro-cid-4sn4zg3r] h1,.prose[data-astro-cid-4sn4zg3r] h2,.prose[data-astro-cid-4sn4zg3r] h3,.prose[data-astro-cid-4sn4zg3r] h4{color:var(--text-primary);margin-top:2rem;margin-bottom:.75rem}.prose[data-astro-cid-4sn4zg3r] h1{font-size:1.75rem}.prose[data-astro-cid-4sn4zg3r] h2{font-size:1.4rem}.prose[data-astro-cid-4sn4zg3r] h3{font-size:1.15rem}.prose[data-astro-cid-4sn4zg3r] p{margin-bottom:1.25rem}.prose[data-astro-cid-4sn4zg3r] a{color:var(--accent);text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--accent)55}.prose[data-astro-cid-4sn4zg3r] a:hover{text-decoration-color:var(--accent)}.prose[data-astro-cid-4sn4zg3r] img{border-radius:var(--radius);border:1px solid var(--border);margin:1.5rem 0}.prose[data-astro-cid-4sn4zg3r] ul,.prose[data-astro-cid-4sn4zg3r] ol{padding-left:1.5rem;margin-bottom:1.25rem}.prose[data-astro-cid-4sn4zg3r] li{margin-bottom:.4rem}.post-footer[data-astro-cid-4sn4zg3r]{margin-top:3rem;padding-top:2rem;border-top:1px solid var(--border)}
+</style></head> <body>  <nav data-astro-cid-dmqpwcec> <div class="nav-inner" data-astro-cid-dmqpwcec> <a href="/" class="logo" data-astro-cid-dmqpwcec>Frank Young</a> <ul class="nav-links" data-astro-cid-dmqpwcec> <li data-astro-cid-dmqpwcec> <a href="/" class="nav-link" data-astro-cid-dmqpwcec> Home </a> </li><li data-astro-cid-dmqpwcec> <a href="/about" class="nav-link" data-astro-cid-dmqpwcec> About </a> </li><li data-astro-cid-dmqpwcec> <a href="/projects" class="nav-link" data-astro-cid-dmqpwcec> Projects </a> </li><li data-astro-cid-dmqpwcec> <a href="/blog" class="nav-link active" data-astro-cid-dmqpwcec> Blog </a> </li> </ul> </div> </nav>  <main class="container" data-astro-cid-4sn4zg3r> <article data-astro-cid-4sn4zg3r> <header class="post-header" data-astro-cid-4sn4zg3r> <div class="post-meta" data-astro-cid-4sn4zg3r> <a href="/blog" class="back-link" data-astro-cid-4sn4zg3r> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-4sn4zg3r> <path d="m15 18-6-6 6-6" data-astro-cid-4sn4zg3r></path> </svg>
+All posts
+</a> <time datetime="2026-06-18T00:00:00.000Z" data-astro-cid-4sn4zg3r>June 18, 2026</time> </div> <h1 data-astro-cid-4sn4zg3r>Harness Engineering 与 Loop Engineering 深度调研报告</h1> <div class="tags" data-astro-cid-4sn4zg3r> <span class="tag" data-astro-cid-4sn4zg3r>AI</span><span class="tag" data-astro-cid-4sn4zg3r>agent</span><span class="tag" data-astro-cid-4sn4zg3r>harness-engineering</span><span class="tag" data-astro-cid-4sn4zg3r>loop-engineering</span><span class="tag" data-astro-cid-4sn4zg3r>LLM</span> </div> </header> <div class="prose" data-astro-cid-4sn4zg3r> <blockquote>
+<p><strong>本文由 AI（Claude）辅助生成</strong>，经人工审阅后发布。调研日期：2026-06-17。</p>
+<p>核心问题：什么是 Harness Engineering 和 Loop Engineering？如何系统学习？</p>
+</blockquote>
+<hr>
+<h2 id="目录">目录</h2>
+<ol>
+<li><a href="#%E4%B8%80harness-engineering">Harness Engineering — AI Agent 基础设施工程</a></li>
+<li><a href="#%E4%BA%8Cloop-engineering">Loop Engineering — Agent 迭代循环工程</a></li>
+<li><a href="#%E4%B8%89%E4%B8%A4%E8%80%85%E7%9A%84%E5%85%B3%E7%B3%BB">两者的关系与协作架构</a></li>
+<li><a href="#%E5%9B%9Bclaude-code-%E6%A1%88%E4%BE%8B%E8%A7%A3%E6%9E%90">以 Claude Code 为例的具体实现</a></li>
+<li><a href="#%E4%BA%94%E7%B3%BB%E7%BB%9F%E5%AD%A6%E4%B9%A0%E8%B7%AF%E5%BE%84">系统学习路径</a></li>
+<li><a href="#%E5%85%AD%E5%8F%82%E8%80%83%E8%B5%84%E6%BA%90">参考资源</a></li>
+</ol>
+<hr>
+<h2 id="一harness-engineering">一、Harness Engineering</h2>
+<h3 id="11-定义">1.1 定义</h3>
+<p><strong>Harness Engineering</strong> 是一门工程学科，专注于设计和维护 <strong>控制 AI Agent 行为的整套基础设施系统</strong>——除模型本身之外的一切。</p>
+<p>核心公式：</p>
+<pre class="astro-code one-dark-pro" style="background-color:#282c34;color:#abb2bf; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Agent = Model + Harness</span></span></code></pre>
+<p>正式定义：Harness 是围绕 LLM 核心推理循环的非模型运行时软件基础设施，负责持续协调工具分发、上下文管理、安全执行和会话持久化，<strong>作为模型推理引擎的操作系统</strong>。</p>
+<blockquote>
+<p>关键区别：Prompt Engineering 是 Harness Engineering 的一个子组件，而非同义词。Prompt Engineering 优化单次模型调用的输入，而 Harness Engineering 覆盖整个基础设施层。</p>
+</blockquote>
+<p>形式化框架（Vishal Mysore, 2026）：</p>
+<pre class="astro-code one-dark-pro" style="background-color:#282c34;color:#abb2bf; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>H = (E, T, C, S, L, V)</span></span></code></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>符号</th><th>含义</th></tr></thead><tbody><tr><td><strong>E</strong></td><td>Execution infrastructure（执行基础设施）</td></tr><tr><td><strong>T</strong></td><td>Tool schemas（工具 Schema）</td></tr><tr><td><strong>C</strong></td><td>Context construction（上下文构建）</td></tr><tr><td><strong>S</strong></td><td>State management（状态管理）</td></tr><tr><td><strong>L</strong></td><td>Verification &#x26; validation logic（验证逻辑）</td></tr><tr><td><strong>V</strong></td><td>Additional validation layers（额外校验层）</td></tr></tbody></table>
+<h3 id="12-三层架构">1.2 三层架构</h3>
+<pre class="astro-code one-dark-pro" style="background-color:#282c34;color:#abb2bf; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>┌─────────────────────────────────────────┐</span></span>
+<span class="line"><span>│  Layer 3 — Feedback（反馈层）            │</span></span>
+<span class="line"><span>│  评估、验证、Human-in-the-loop            │</span></span>
+<span class="line"><span>├─────────────────────────────────────────┤</span></span>
+<span class="line"><span>│  Layer 2 — Execution（执行层）           │</span></span>
+<span class="line"><span>│  Agentic Loop: Plan→Tool→Parse→Guard→Retry│</span></span>
+<span class="line"><span>├─────────────────────────────────────────┤</span></span>
+<span class="line"><span>│  Layer 1 — Information（信息层）         │</span></span>
+<span class="line"><span>│  记忆检索、上下文构建、工具暴露             │</span></span>
+<span class="line"><span>└─────────────────────────────────────────┘</span></span></code></pre>
+<h3 id="13-核心组件">1.3 核心组件</h3>
+<p>使用 Martin Fowler 的 Guides-and-Sensors 分类法：</p>
+<p><strong>Guides（前馈控制 — 约束型）</strong></p>
+<ul>
+<li>System Prompts：定义 Agent 角色与范围</li>
+<li>CLAUDE.md / AGENTS.md：指定允许行为</li>
+<li>约束文件：建立禁止边界</li>
+<li>数据上下文管道：提供经认证的信息</li>
+</ul>
+<p><strong>Sensors（反馈控制 — 验证型）</strong></p>
+<ul>
+<li>自动化测试套件：评分输出质量</li>
+<li>实时验证循环：标记约束违规</li>
+<li>输出解析器：将文本转为类型化数据</li>
+<li>漂移检测器：识别行为退化</li>
+</ul>
+<h3 id="14-设计原则">1.4 设计原则</h3>
+<ol>
+<li><strong>Deny-First 安全姿态</strong>：宽泛的拒绝规则优先于狭窄的允许规则</li>
+<li><strong>权限分离</strong>：推理层与执行决策层隔离，防止 Prompt Injection</li>
+<li><strong>可逆性加权</strong>：高风险操作要求用户确认，低风险操作自动执行</li>
+<li><strong>上下文作为稀缺资源</strong>：从设计初始就假设上下文窗口是约束瓶颈</li>
+<li><strong>环境分层防御</strong>：Intent Layer → Harness Layer → Environment Layer，层层独立</li>
+</ol>
+<h3 id="15-为什么重要">1.5 为什么重要</h3>
+<ul>
+<li><strong>88% 的 AI 试点项目无法进入生产</strong>（Shakudo, 2026）</li>
+<li><strong>65% 的企业 AI 失败追溯到 Harness 缺陷</strong>：Context Drift（上下文漂移）、Schema Misalignment（Schema 不对齐）、State Degradation（状态退化）</li>
+<li>优化 Harness（而非更换模型）可将 Token 成本从 $3.00/百万降至 $0.30/百万，同时实现 4x 延迟改善</li>
+</ul>
+<hr>
+<h2 id="二loop-engineering">二、Loop Engineering</h2>
+<h3 id="21-定义">2.1 定义</h3>
+<p><strong>Loop Engineering</strong> 是设计 AI Agent 自主迭代执行循环的工程实践——指定目标、设置触发器、构建护栏，让 Agent 无需人工干预地反复运行直到达成目标。</p>
+<blockquote>
+<p>“Loop Engineering 用目标驱动的自动化取代了手动提示。” — MindStudio, 2026</p>
+</blockquote>
+<p>范式演进：</p>
+<pre class="astro-code one-dark-pro" style="background-color:#282c34;color:#abb2bf; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>2022-2024 → 专注于优化高质量 Prompt</span></span>
+<span class="line"><span>2025     → 专注于管理上下文窗口</span></span>
+<span class="line"><span>2026     → 设计整个系统架构（Loop Engineering）</span></span></code></pre>
+<p>工程师角色从「转动曲柄的操作员」转变为「设计机器的架构师」。</p>
+<h3 id="22-react-模式核心基础">2.2 ReAct 模式（核心基础）</h3>
+<p>ReAct（Reasoning + Acting）由 Yao et al. 于 2022 年提出（发表于 ICLR 2023），是现代所有主要自主 AI 系统的核心架构。</p>
+<pre class="astro-code one-dark-pro" style="background-color:#282c34;color:#abb2bf; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Thought → Action → Observation → Thought → Action → ...（直到终止）</span></span></code></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>阶段</th><th>内容</th></tr></thead><tbody><tr><td><strong>Thought</strong></td><td>Agent 在行动前评估情况，推理为何使用某工具</td></tr><tr><td><strong>Action</strong></td><td>执行具体工具调用（搜索、读文件、运行代码等）</td></tr><tr><td><strong>Observation</strong></td><td>工具结果反馈回上下文，驱动下一轮推理</td></tr></tbody></table>
+<p>实验结果：在 ALFWorld 和 WebShop 两个交互式决策基准上，ReAct 分别以绝对成功率 34% 和 10% 超越了模仿学习和强化学习方法。</p>
+<h3 id="23-loop-架构类型">2.3 Loop 架构类型</h3>
+<pre class="astro-code one-dark-pro" style="background-color:#282c34;color:#abb2bf; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>链（Chain）: A → B → C（线性，固定路径）</span></span>
+<span class="line"><span>循环（Loop）: A → B → [发现B失败] → 修改策略 → B' →...（动态，自适应）</span></span></code></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>代际</th><th>代表</th><th>特点</th></tr></thead><tbody><tr><td>Gen 1 (2023)</td><td>AutoGPT</td><td>概念验证，稳定性差</td></tr><tr><td>Gen 2 (2024)</td><td>LangGraph, CrewAI</td><td>带状态图的受控循环</td></tr><tr><td>Gen 3 (2025)</td><td>Claude <code>/goal</code>, OpenAI Swarm</td><td>目标条件终止</td></tr><tr><td>Gen 4 (2026)</td><td>多Agent编排，Ralph Loop</td><td>跨会话文件持久化状态</td></tr></tbody></table>
+<p><strong>Ralph Loop</strong>（特殊模式）：在迭代间重置上下文，用文件系统保存状态——解决长任务的上下文溢出问题。</p>
+<h3 id="24-状态管理">2.4 状态管理</h3>
+<pre class="astro-code one-dark-pro" style="background-color:#282c34;color:#abb2bf; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Agentic System = Agent × Stateful Environment（闭环）</span></span></code></pre>
+<p>Agent 将交互历史与相关上下文映射到下一个工具调用动作，环境执行并返回 Observation。</p>
+<p>五大状态管理要素：</p>
+<ol>
+<li><strong>会话内记忆</strong>：当前上下文窗口中的消息历史</li>
+<li><strong>外部持久化</strong>：Markdown 文件、数据库、任务板</li>
+<li><strong>上下文压缩</strong>：Snip → Microcompact → Context Collapse → Auto-Compact</li>
+<li><strong>Snapshot 机制</strong>：修改前记录文件状态，支持回滚</li>
+<li><strong>跨 Agent 传递</strong>：Sub-agent 间的结构化 handoff</li>
+</ol>
+<h3 id="25-终止条件设计关键">2.5 终止条件设计（关键）</h3>
+<blockquote>
+<p>“没有明确的停止条件，循环就会一直运行直到钱烧完。” — DataScienceDojo, 2026</p>
+</blockquote>
+<p>五类终止机制：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>机制</th><th>实现方式</th><th>适用场景</th></tr></thead><tbody><tr><td><strong>目标完成信号</strong></td><td>Agent 输出 <code>TASK_COMPLETED</code> 等显式标记</td><td>主要终止路径</td></tr><tr><td><strong>步骤预算</strong></td><td>最大迭代次数（如 max_turns=50）</td><td>硬性保险</td></tr><tr><td><strong>Token 预算</strong></td><td>上下文窗口使用率阈值</td><td>成本控制</td></tr><tr><td><strong>无进展检测</strong></td><td>语义相似度检测（Cosine Similarity on embeddings）</td><td>识别循环卡死</td></tr><tr><td><strong>熔断器</strong></td><td>连续失败 N 次后终止（Circuit Breaker 模式）</td><td>错误隔离</td></tr></tbody></table>
+<p>防止无限循环的高级策略：</p>
+<ul>
+<li>强制最终状态：<code>completed</code> / <code>failed</code> / <code>needs_human</code></li>
+<li>任务 ID 幂等性：防止重复处理同一任务</li>
+<li>反递归规则：禁止 Agent 将相同任务反复路由给同一 Sub-agent</li>
+<li>Meta-Agent 监控：独立观察 Agent 检测循环并介入</li>
+</ul>
+<hr>
+<h2 id="三两者的关系">三、两者的关系</h2>
+<h3 id="31-协作关系">3.1 协作关系</h3>
+<pre class="astro-code one-dark-pro" style="background-color:#282c34;color:#abb2bf; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>┌───────────────────────────────────────────────────────────┐</span></span>
+<span class="line"><span>│                    HARNESS ENGINEERING                     │</span></span>
+<span class="line"><span>│                                                           │</span></span>
+<span class="line"><span>│  ┌─────────────────────────────────────────────────────┐  │</span></span>
+<span class="line"><span>│  │                 LOOP ENGINEERING                    │  │</span></span>
+<span class="line"><span>│  │                                                     │  │</span></span>
+<span class="line"><span>│  │  Trigger → [Thought → Action → Observation] → Stop │  │</span></span>
+<span class="line"><span>│  │               ↑__________________________↑          │  │</span></span>
+<span class="line"><span>│  └─────────────────────────────────────────────────────┘  │</span></span>
+<span class="line"><span>│                                                           │</span></span>
+<span class="line"><span>│  Tool Registry | Permission System | Context Manager      │</span></span>
+<span class="line"><span>│  Hook System   | Session Storage   | MCP Layer            │</span></span>
+<span class="line"><span>│  Observability | Safety Classifier | Compaction Pipeline  │</span></span>
+<span class="line"><span>└───────────────────────────────────────────────────────────┘</span></span></code></pre>
+<p><strong>Harness</strong> 是基础设施（硬件），<strong>Loop</strong> 是在其上运行的执行模式（软件）。</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>维度</th><th>Harness Engineering</th><th>Loop Engineering</th></tr></thead><tbody><tr><td><strong>关注点</strong></td><td>系统如何被约束和执行</td><td>系统如何推理和迭代</td></tr><tr><td><strong>核心产物</strong></td><td>工具注册表、权限规则、Hook</td><td>目标设定、终止条件、状态流</td></tr><tr><td><strong>失败模式</strong></td><td>权限绕过、上下文漂移、Schema 错误</td><td>无限循环、卡死、目标漂移</td></tr><tr><td><strong>设计比喻</strong></td><td>操作系统</td><td>应用程序</td></tr></tbody></table>
+<h3 id="32-三层控制平面">3.2 三层控制平面</h3>
+<pre class="astro-code one-dark-pro" style="background-color:#282c34;color:#abb2bf; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Intent Layer（意图层）</span></span>
+<span class="line"><span>  └── CLAUDE.md, system prompts → 塑造意图，无强制力</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>Harness Layer（Harness 层）</span></span>
+<span class="line"><span>  └── settings.json, hooks, MCP → 控制允许分发的工具调用</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>Environment Layer（环境层）</span></span>
+<span class="line"><span>  └── OS 用户隔离, 容器, 网络过滤 → 决定实际能完成什么</span></span></code></pre>
+<p>关键洞察：“CLAUDE.md 是进入模型上下文的文本，模型通常会遵循它，但背后没有执行层。“</p>
+<hr>
+<h2 id="四claude-code-案例解析">四、Claude Code 案例解析</h2>
+<p>Claude Code 是目前最成熟的 Harness + Loop 工程实现之一，经过 VILA-Lab（arxiv 2604.14228）的系统性逆向分析。</p>
+<h3 id="41-架构概览">4.1 架构概览</h3>
+<pre class="astro-code one-dark-pro" style="background-color:#282c34;color:#abb2bf; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>98.4% 基础设施代码 + 1.6% AI 调用代码</span></span>
+<span class="line"><span>"Agent Loop 本身是简单的 while 循环；</span></span>
+<span class="line"><span> 真正的复杂度在于权限门、上下文管理和恢复逻辑。"</span></span></code></pre>
+<h3 id="42-八大核心-harness-组件">4.2 八大核心 Harness 组件</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>组件</th><th>功能</th></tr></thead><tbody><tr><td><strong>Tool Executor</strong></td><td>将模型工具请求转为文件系统/Shell/Web 操作</td></tr><tr><td><strong>Permission Manager</strong></td><td>四种审批模式（默认/自动接受编辑/计划/自动）</td></tr><tr><td><strong>Hook System</strong></td><td>27 个生命周期事件（SessionStart, PreToolUse, PostToolUse 等）</td></tr><tr><td><strong>Context Manager</strong></td><td>管理 200K Token 预算：压缩、缓存、懒加载</td></tr><tr><td><strong>MCP Layer</strong></td><td>通过 Model Context Protocol 路由第三方工具</td></tr><tr><td><strong>Skill System</strong></td><td>按需加载的模块化 Markdown 知识包</td></tr><tr><td><strong>Subagent Framework</strong></td><td>独立模型实例处理并行或专业化任务</td></tr><tr><td><strong>Session Storage</strong></td><td>JSONL 持久化，支持 resume/fork/rewind</td></tr></tbody></table>
+<h3 id="43-agentic-loop-实现">4.3 Agentic Loop 实现</h3>
+<pre class="astro-code one-dark-pro" style="background-color:#282c34;color:#abb2bf; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>queryLoop() 异步生成器（query.ts）</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>每轮 9 步流水线：</span></span>
+<span class="line"><span>设置初始化 → 状态加载 → 上下文组装 → 工具 Schema 注入</span></span>
+<span class="line"><span>  → [五级压缩管道] → 模型调用 → 工具分发 → 权限校验 → 结果追加</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>五级压缩管道（最便宜优先）：</span></span>
+<span class="line"><span>  Budget Reduction → Snip → Microcompact → Context Collapse → Auto-Compact</span></span></code></pre>
+<h3 id="44-权限系统七层独立安全">4.4 权限系统（七层独立安全）</h3>
+<pre class="astro-code one-dark-pro" style="background-color:#282c34;color:#abb2bf; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Deny List → Ask List → Allow List → Default Mode</span></span>
+<span class="line"><span>               ↑</span></span>
+<span class="line"><span>    独立 Safety Classifier（仅看用户请求+工具调用，不看模型推理，防 Prompt Injection）</span></span></code></pre>
+<h3 id="45-三种部署模式">4.5 三种部署模式</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>模式</th><th>Harness</th><th>环境</th><th>适用场景</th></tr></thead><tbody><tr><td><strong>Pattern A</strong></td><td>仅 Harness，每个动作询问</td><td>裸机</td><td>生产敏感仓库</td></tr><tr><td><strong>Pattern B</strong></td><td>Harness + 轻量环境（路径黑名单）</td><td>半隔离</td><td>平衡自主性与安全</td></tr><tr><td><strong>Pattern C</strong></td><td>完整 Harness + 容器隔离 + 网络过滤</td><td>沙箱</td><td>无人值守过夜自主运行</td></tr></tbody></table>
+<hr>
+<h2 id="五系统学习路径">五、系统学习路径</h2>
+<h3 id="阶段一基础1-4周">阶段一：基础（1-4周）</h3>
+<p><strong>目标</strong>：理解 AI Agent 的概念基础</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>内容</th><th>资源</th></tr></thead><tbody><tr><td>LLM 基础与 API 使用</td><td>Anthropic / OpenAI 官方文档</td></tr><tr><td>ReAct 原始论文</td><td><a href="https://react-lm.github.io">react-lm.github.io</a></td></tr><tr><td>链式思考与工具调用</td><td>Claude API Docs: Tool Use</td></tr><tr><td>第一个 Agent Demo</td><td>LangChain 入门教程</td></tr></tbody></table>
+<h3 id="阶段二loop-engineering4-8周">阶段二：Loop Engineering（4-8周）</h3>
+<p><strong>目标</strong>：掌握 Agentic Loop 设计</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>内容</th><th>资源</th></tr></thead><tbody><tr><td>ReAct / Reflexion / Tree-of-Thought</td><td>原始论文 + DataScienceDojo 指南</td></tr><tr><td>LangGraph 状态图 Agent</td><td>LangGraph 官方文档</td></tr><tr><td>终止条件与无限循环防御</td><td>Google ADK Loop Pattern</td></tr><tr><td>Claude <code>/goal</code> 与 <code>/loop</code> 命令</td><td>Claude Code 官方文档</td></tr></tbody></table>
+<p>实践项目：构建一个有明确终止条件的研究 Agent（给定主题，自主搜索→验证→输出报告）</p>
+<h3 id="阶段三harness-engineering8-16周">阶段三：Harness Engineering（8-16周）</h3>
+<p><strong>目标</strong>：掌握 Agent 基础设施构建</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>内容</th><th>资源</th></tr></thead><tbody><tr><td>MCP 协议与工具注册</td><td>MCP 官方规范</td></tr><tr><td>权限模型与安全设计</td><td>Claude Code Harness 分析文章</td></tr><tr><td>Hook 系统与生命周期事件</td><td>Claude Code 文档：Hooks</td></tr><tr><td>上下文管理与压缩策略</td><td>VILA-Lab arxiv 2604.14228</td></tr><tr><td>可观测性：日志、追踪、评估</td><td>OpenTelemetry for AI</td></tr></tbody></table>
+<p>实践项目：为自己的工具链构建一个权限控制的 MCP Server，接入 Claude Code</p>
+<h3 id="阶段四多-agent-系统16-20周">阶段四：多 Agent 系统（16-20周）</h3>
+<p><strong>目标</strong>：设计生产级 Multi-Agent 架构</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>内容</th><th>资源</th></tr></thead><tbody><tr><td>Supervisor + Sub-agent 模式</td><td>CrewAI / AutoGen 文档</td></tr><tr><td>A2A（Agent-to-Agent）协议</td><td>Google A2A 规范</td></tr><tr><td>跨 Agent 状态传递</td><td>LangGraph Multi-Agent</td></tr><tr><td>企业级治理与安全</td><td>TRiSM for Agentic AI (arxiv 2506.04133)</td></tr></tbody></table>
+<h3 id="核心学习资源清单">核心学习资源清单</h3>
+<p><strong>论文</strong></p>
+<ul>
+<li>ReAct: Synergizing Reasoning and Acting (Yao et al., ICLR 2023)</li>
+<li>Dive into Claude Code (VILA-Lab, arxiv 2604.14228)</li>
+<li>TRiSM for Agentic AI (arxiv 2506.04133)</li>
+<li>Architecting Agentic Communities (arxiv 2601.03624)</li>
+</ul>
+<p><strong>文章与指南</strong></p>
+<ul>
+<li>Harness Engineering: The Infrastructure Layer（Medium, Vishal Mysore）</li>
+<li>Agent Harness Engineering: The Rise of the AI Control Plane（Medium, Adnan Masood）</li>
+<li>Claude Code Harness &#x26; Environment Engineering（hidekazu-konishi.com）</li>
+<li>Loop Engineering: The Quiet Revolution（AlphaMatch Blog）</li>
+</ul>
+<p><strong>官方文档</strong></p>
+<ul>
+<li>Claude Code 官方文档（code.claude.com）</li>
+<li>Claude Agent SDK: How the agent loop works</li>
+<li>Model Context Protocol 规范</li>
+<li>Google Cloud: Agentic AI Design Patterns</li>
+</ul>
+<p><strong>课程</strong></p>
+<ul>
+<li>Agentic AI Engineering Masterclass 2026（Udemy）</li>
+<li>The Complete Agentic AI Engineering Course（Udemy）</li>
+<li>Analytics Vidhya: Agentic AI Learning Path</li>
+</ul>
+<hr>
+<h2 id="六参考资源">六、参考资源</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>来源</th><th>链接</th></tr></thead><tbody><tr><td>Medium - Harness Engineering（Vishal Mysore）</td><td><a href="https://medium.com/@visrow/harness-engineering-the-infrastructure-layer-that-makes-ai-agents-actually-work-598a279c1c5f">链接</a></td></tr><tr><td>Atlan - What Is Harness Engineering</td><td><a href="https://atlan.com/know/what-is-harness-engineering/">链接</a></td></tr><tr><td>Medium - Agent Harness Control Plane（Adnan Masood）</td><td><a href="https://medium.com/@adnanmasood/agent-harness-engineering-the-rise-of-the-ai-control-plane-938ead884b1d">链接</a></td></tr><tr><td>WaveSpeed - Claude Code Harness Architecture</td><td><a href="https://wavespeed.ai/blog/posts/claude-code-agent-harness-architecture/">链接</a></td></tr><tr><td>hidekazu-konishi - Harness &#x26; Environment Engineering</td><td><a href="https://hidekazu-konishi.com/entry/claude_code_harness_and_environment_engineering_guide.html">链接</a></td></tr><tr><td>Pasquale Pillitteri - Claude Code Runtime Architecture</td><td><a href="https://pasqualepillitteri.it/en/news/1892/claude-code-harness-runtime-architecture-2026-guide">链接</a></td></tr><tr><td>VILA-Lab - Dive into Claude Code (arxiv)</td><td><a href="https://arxiv.org/pdf/2604.14228">链接</a></td></tr><tr><td>DataScienceDojo - Agentic Loops Guide</td><td><a href="https://datasciencedojo.com/blog/agentic-loops-explained-from-react-to-loop-engineering-2026-guide/">链接</a></td></tr><tr><td>MindStudio - What Is Loop Engineering</td><td><a href="https://www.mindstudio.ai/blog/what-is-loop-engineering-ai-coding-agents">链接</a></td></tr><tr><td>AlphaMatch - Loop Engineering 2026</td><td><a href="https://www.alphamatch.ai/blog/loop-engineering-ai-coding-2026">链接</a></td></tr><tr><td>react-lm.github.io - ReAct 原始论文</td><td><a href="https://react-lm.github.io/">链接</a></td></tr><tr><td>Oracle - What Is the AI Agent Loop</td><td><a href="https://blogs.oracle.com/developers/what-is-the-ai-agent-loop-the-core-architecture-behind-autonomous-ai-systems">链接</a></td></tr><tr><td>DEV Community - Preventing Infinite Loops</td><td><a href="https://dev.to/alessandro_pignati/stop-the-loop-how-to-prevent-infinite-conversations-in-your-ai-agents-ekj">链接</a></td></tr><tr><td>Google Cloud - Agentic AI Design Patterns</td><td><a href="https://docs.cloud.google.com/architecture/choose-design-pattern-agentic-ai-system">链接</a></td></tr><tr><td>MachineLearningMastery - Agentic AI Roadmap</td><td><a href="https://machinelearningmastery.com/the-roadmap-for-mastering-agentic-ai-in-2026/">链接</a></td></tr><tr><td>Shakudo - Enterprise AI Failure Analysis</td><td><a href="https://www.shakudo.io/blog/enterprise-ai-agent-production-failures">链接</a></td></tr><tr><td>GitHub - awesome-harness-engineering</td><td><a href="https://github.com/ai-boost/awesome-harness-engineering">链接</a></td></tr><tr><td>GitHub - Dive-into-Claude-Code</td><td><a href="https://github.com/VILA-Lab/Dive-into-Claude-Code">链接</a></td></tr></tbody></table>
+<hr>
+<blockquote>
+<p><strong>核心洞察</strong>：Harness Engineering 和 Loop Engineering 是 2026 年 AI Agent 工程的两个核心支柱——前者解决”Agent 在什么约束下运行”，后者解决”Agent 如何自主迭代到达目标”。两者的结合，才构成从 Demo 到生产部署的完整工程能力。</p>
+</blockquote> </div> <footer class="post-footer" data-astro-cid-4sn4zg3r> <a href="/blog" class="back-link" data-astro-cid-4sn4zg3r> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-4sn4zg3r> <path d="m15 18-6-6 6-6" data-astro-cid-4sn4zg3r></path> </svg>
+Back to all posts
+</a> </footer> </article> </main> <footer data-astro-cid-sz7xmlte> <div class="footer-inner" data-astro-cid-sz7xmlte> <p class="copyright" data-astro-cid-sz7xmlte>© 2026 Frank Young</p> <div class="footer-links" data-astro-cid-sz7xmlte> <a href="https://github.com/frank2679" target="_blank" rel="noopener noreferrer" aria-label="GitHub" data-astro-cid-sz7xmlte> <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" data-astro-cid-sz7xmlte> <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" data-astro-cid-sz7xmlte></path> </svg> </a> <a href="mailto:2679frank@gmail.com" aria-label="Email" data-astro-cid-sz7xmlte> <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-sz7xmlte> <rect width="20" height="16" x="2" y="4" rx="2" data-astro-cid-sz7xmlte></rect> <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" data-astro-cid-sz7xmlte></path> </svg> </a> </div> </div> </footer>   </body></html> 
