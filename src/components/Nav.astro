@@ -4,6 +4,7 @@ const currentPath = Astro.url.pathname;
 const links = [
   { href: '/', label: 'Home' },
   { href: '/about', label: 'About' },
+  { href: '/resume', label: 'Resume' },
   { href: '/projects', label: 'Projects' },
   { href: '/blog', label: 'Blog' },
 ];
@@ -12,7 +13,11 @@ const links = [
 <nav>
   <div class="nav-inner">
     <a href="/" class="logo">Frank Young</a>
-    <ul class="nav-links">
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation">
+      <span class="menu-toggle-label">Menu</span>
+      <span class="menu-icon" aria-hidden="true"></span>
+    </button>
+    <ul id="primary-navigation" class="nav-links">
       {links.map(({ href, label }) => (
         <li>
           <a
@@ -26,6 +31,27 @@ const links = [
     </ul>
   </div>
 </nav>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>('.menu-toggle');
+  const links = document.querySelector<HTMLElement>('.nav-links');
+
+  const closeMenu = () => {
+    toggle?.setAttribute('aria-expanded', 'false');
+    links?.classList.remove('open');
+  };
+
+  toggle?.addEventListener('click', () => {
+    const isOpen = toggle.getAttribute('aria-expanded') === 'true';
+    toggle.setAttribute('aria-expanded', String(!isOpen));
+    links?.classList.toggle('open', !isOpen);
+  });
+
+  links?.addEventListener('click', closeMenu);
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') closeMenu();
+  });
+</script>
 
 <style>
   nav {
@@ -67,6 +93,44 @@ const links = [
     margin: 0;
   }
 
+  .menu-toggle {
+    display: none;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--bg-card);
+    color: var(--text-primary);
+    padding: 0.4rem 0.65rem;
+    font: inherit;
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+
+  .menu-icon,
+  .menu-icon::before,
+  .menu-icon::after {
+    display: block;
+    width: 16px;
+    height: 2px;
+    background: currentColor;
+    border-radius: 2px;
+  }
+
+  .menu-icon {
+    position: relative;
+  }
+
+  .menu-icon::before,
+  .menu-icon::after {
+    content: '';
+    position: absolute;
+    left: 0;
+  }
+
+  .menu-icon::before { top: -5px; }
+  .menu-icon::after { top: 5px; }
+
   .nav-link {
     color: var(--text-secondary);
     font-size: 0.9rem;
@@ -85,13 +149,33 @@ const links = [
     color: var(--accent);
   }
 
-  @media (max-width: 480px) {
-    .logo {
-      font-size: 0.95rem;
+  @media (max-width: 640px) {
+    .menu-toggle {
+      display: inline-flex;
     }
+
+    .nav-links {
+      display: none;
+      position: absolute;
+      top: 60px;
+      right: 1rem;
+      left: 1rem;
+      flex-direction: column;
+      gap: 0.25rem;
+      padding: 0.5rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: 0 12px 24px #00000044;
+    }
+
+    .nav-links.open {
+      display: flex;
+    }
+
     .nav-link {
-      padding: 0.4rem 0.5rem;
-      font-size: 0.85rem;
+      display: block;
+      padding: 0.6rem 0.75rem;
     }
   }
 </style>
