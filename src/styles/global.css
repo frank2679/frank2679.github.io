@@ -48,6 +48,11 @@ a:hover {
   color: var(--accent-hover);
 }
 
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
 img {
   max-width: 100%;
   height: auto;
@@ -161,5 +166,16 @@ tr:nth-child(even) {
 @media (max-width: 640px) {
   body {
     font-size: 15px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
   }
 }

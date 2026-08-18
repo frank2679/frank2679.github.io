@@ -28,27 +28,28 @@ const allTags = [...new Set(posts.flatMap((p) => p.data.tags))].sort();
 
     {allTags.length > 0 && (
       <div class="tag-bar">
+        <a href="#all" class="tag-filter active" data-tag-filter="all" aria-current="page">All</a>
         {allTags.map((tag) => (
-          <span class="tag">{tag}</span>
+          <a href={`#tag=${encodeURIComponent(tag)}`} class="tag-filter" data-tag-filter={tag}>{tag}</a>
         ))}
       </div>
     )}
 
     <div class="posts-list">
       {posts.map((post) => (
-        <PostCard
-          title={post.data.title}
-          date={post.data.date}
-          slug={post.id}
-          tags={post.data.tags}
-          description={post.data.description}
-        />
+        <div class="post-item" data-tags={JSON.stringify(post.data.tags)}>
+          <PostCard
+            title={post.data.title}
+            date={post.data.date}
+            slug={post.id}
+            tags={post.data.tags}
+            description={post.data.description}
+          />
+        </div>
       ))}
     </div>
 
-    {posts.length === 0 && (
-      <p class="empty">No posts yet. Check back soon.</p>
-    )}
+    <p class="empty" hidden>No posts found for this tag. <a href="#all">Show all posts</a>.</p>
   </main>
 
   <Footer />
@@ -86,8 +87,31 @@ const allTags = [...new Set(posts.flatMap((p) => p.data.tags))].sort();
     border-bottom: 1px solid var(--border);
   }
 
+  .tag-filter {
+    display: inline-block;
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+    padding: 0.2em 0.65em;
+    border-radius: 4px;
+    font-size: 0.78rem;
+    font-family: var(--font-mono);
+    font-weight: 500;
+  }
+
+  .tag-filter:hover,
+  .tag-filter.active {
+    background: var(--accent-dim);
+    border-color: var(--accent)66;
+    color: var(--accent);
+  }
+
   .posts-list {
     border-top: 1px solid var(--border);
+  }
+
+  .post-item[hidden] {
+    display: none;
   }
 
   .empty {
@@ -96,3 +120,32 @@ const allTags = [...new Set(posts.flatMap((p) => p.data.tags))].sort();
     padding: 3rem 0;
   }
 </style>
+
+<script>
+  const filters = [...document.querySelectorAll<HTMLAnchorElement>('[data-tag-filter]')];
+  const postItems = [...document.querySelectorAll<HTMLElement>('.post-item')];
+  const empty = document.querySelector<HTMLElement>('.empty');
+
+  const applyFilter = () => {
+    const tag = location.hash.startsWith('#tag=') ? decodeURIComponent(location.hash.slice(5)) : 'all';
+    let visible = 0;
+
+    postItems.forEach((item) => {
+      const tags = JSON.parse(item.dataset.tags || '[]') as string[];
+      const matches = tag === 'all' || tags.includes(tag);
+      item.hidden = !matches;
+      if (matches) visible += 1;
+    });
+
+    filters.forEach((filter) => {
+      const active = filter.dataset.tagFilter === tag || (tag === 'all' && filter.dataset.tagFilter === 'all');
+      filter.classList.toggle('active', active);
+      if (active) filter.setAttribute('aria-current', 'page');
+      else filter.removeAttribute('aria-current');
+    });
+    if (empty) empty.hidden = visible > 0;
+  };
+
+  window.addEventListener('hashchange', applyFilter);
+  applyFilter();
+</script>
