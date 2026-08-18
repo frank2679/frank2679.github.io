@@ -45,6 +45,10 @@ import Footer from '../components/Footer.astro';
         experience. 5 AI-domain patents and 2 IEEE publications.
       </p>
       <p class="summary-text">
+        Most projects delivered 0-to-1: technology selection, framework build-out, core operator development,
+        AI-assisted and Git-based development workflows, and CI/CD.
+      </p>
+      <p class="summary-text">
         Triathlon enthusiast — long-distance running, cycling, and swimming keep the mind sharp.
       </p>
     </section>
@@ -65,15 +69,14 @@ import Footer from '../components/Footer.astro';
               <span class="period">2024.12 – Present</span>
             </div>
             <ul class="job-duties">
-              <li>GEMM-like operator development for next-generation AI inference chips</li>
-              <li>Porting NVIDIA CUTLASS framework and CuTe layout algebra to new chip architecture</li>
-              <li>Implementing generalized GEMM operators with handwritten assembly optimization</li>
+              <li>Core GEMM operator development with DV-based hardware/software co-analysis, covering GEMM tile size, SRAM sizing, and swizzle mechanisms</li>
+              <li>Building an operator template library (KTL) for the AI harness and expert kernel engineers, using CUTLASS v3.x programming patterns to support AI codegen and header-only invocation</li>
             </ul>
             <div class="job-tags">
               <span class="tag">C++</span>
               <span class="tag">CUTLASS</span>
               <span class="tag">GEMM</span>
-              <span class="tag">Assembly</span>
+              <span class="tag">KTL</span>
             </div>
           </div>
         </div>
@@ -210,7 +213,7 @@ import Footer from '../components/Footer.astro';
         </div>
         <div class="skill-row">
           <span class="skill-cat">Tools</span>
-          <span class="skill-vals">CMake, Git, Jenkins, JIRA, Verdi/SimVision</span>
+          <span class="skill-vals">Claude Code (MCP/Skill/Agent build & distribution), CMake, Git, Jenkins, JIRA, Verdi/SimVision</span>
         </div>
         <div class="skill-row">
           <span class="skill-cat">Platforms</span>
