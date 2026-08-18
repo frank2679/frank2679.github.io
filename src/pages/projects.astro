@@ -6,16 +6,16 @@ import ProjectCard from '../components/ProjectCard.astro';
 
 const projects = [
   {
-    title: 'CUTLASS Architecture Port',
+    title: 'Operator Template Library (KTL) Development',
     period: '2025.07 – Present',
     description:
-      'Porting NVIDIA\'s CUTLASS framework and CuTe layout algebra to a new chip architecture. Implemented generalized GEMM operators using CUTLASS programming patterns with handwritten assembly for ultimate performance.',
-    tags: ['C++', 'CUTLASS', 'GEMM', 'Assembly', 'GPU Architecture'],
+      'Started as a CUTLASS framework and CuTe layout algebra research effort, porting a generalized GEMM implementation to a new chip. Pivoted to building a CUTLASS v3.x-style kernel template library (KTL) for the AI harness and expert kernel engineers.',
+    tags: ['C++', 'CUTLASS', 'GEMM', 'KTL', 'AI Harness', 'Codegen'],
     highlights: [
-      'Studied CuTe layout algebra and CUTLASS programming model in depth',
-      'Designed architecture-specific kernel variants for new chip ISA',
-      'Achieved target utilization on Vcore/Tcore platforms for critical shapes',
-      '2 patents filed for optimization techniques',
+      '2025.07–2025.09: Studied CuTe layout algebra and the CUTLASS programming model in depth; ported a generalized GEMM implementation to a new chip',
+      '2026.06–Present: Pivoted to a CUTLASS v3.x-style kernel template library (KTL) for the AI harness',
+      'Covers elementwise, reduce, GEMM, conv, normalization, activation, and fusion operators (e.g., attention, MoE)',
+      'Supports AI codegen and header-only invocation for generating high-performance operators',
     ],
   },
   {
