@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Frank Young — Blog</title>
+    <link>https://frank2679.github.io/</link>
+    <description>Technical writing on HPC, C++, AI acceleration, and engineering.</description>
+    <language>en</language>
+    <item>
+      <title>Harness Engineering 与 Loop Engineering 深度调研报告</title>
+      <link>https://frank2679.github.io/blog/20260618-harness-loop-engineering</link>
+      <guid isPermaLink="true">https://frank2679.github.io/blog/20260618-harness-loop-engineering</guid>
+      <description>系统梳理 Harness Engineering 与 Loop Engineering 的定义、架构、关系，以及以 Claude Code 为例的工程实践，附完整学习路径。</description>
+      <pubDate>Thu, 18 Jun 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>如何提升自己获取信息的能力</title>
+      <link>https://frank2679.github.io/blog/20241107-info-retrieve</link>
+      <guid isPermaLink="true">https://frank2679.github.io/blog/20241107-info-retrieve</guid>
+      <description></description>
+      <pubDate>Thu, 07 Nov 2024 15:39:40 GMT</pubDate>
+    </item>
+    <item>
+      <title>C++ Code Coverage</title>
+      <link>https://frank2679.github.io/blog/20241022-code-coverage</link>
+      <guid isPermaLink="true">https://frank2679.github.io/blog/20241022-code-coverage</guid>
+      <description></description>
+      <pubDate>Tue, 22 Oct 2024 15:46:50 GMT</pubDate>
+    </item>
+    <item>
+      <title>聊聊 C++ RAII</title>
+      <link>https://frank2679.github.io/blog/202308-02-cpp-raii</link>
+      <guid isPermaLink="true">https://frank2679.github.io/blog/202308-02-cpp-raii</guid>
+      <description></description>
+      <pubDate>Thu, 31 Aug 2023 22:14:35 GMT</pubDate>
+    </item>
+    <item>
+      <title>cpp 编译时间优化</title>
+      <link>https://frank2679.github.io/blog/202308-01-cpp-compile-optimize</link>
+      <guid isPermaLink="true">https://frank2679.github.io/blog/202308-01-cpp-compile-optimize</guid>
+      <description></description>
+      <pubDate>Wed, 16 Aug 2023 10:48:50 GMT</pubDate>
+    </item>
+    <item>
+      <title>graphviz 简介</title>
+      <link>https://frank2679.github.io/blog/202306-01-graphviz-md</link>
+      <guid isPermaLink="true">https://frank2679.github.io/blog/202306-01-graphviz-md</guid>
+      <description></description>
+      <pubDate>Mon, 26 Jun 2023 17:54:13 GMT</pubDate>
+    </item>
+    <item>
+      <title>AI 不能替我们锻炼身体</title>
+      <link>https://frank2679.github.io/blog/202305-02-sports</link>
+      <guid isPermaLink="true">https://frank2679.github.io/blog/202305-02-sports</guid>
+      <description></description>
+      <pubDate>Sun, 21 May 2023 14:49:59 GMT</pubDate>
+    </item>
+    <item>
+      <title>用 Mac 学习英文</title>
+      <link>https://frank2679.github.io/blog/202305-01-mac-usage</link>
+      <guid isPermaLink="true">https://frank2679.github.io/blog/202305-01-mac-usage</guid>
+      <description></description>
+      <pubDate>Sun, 07 May 2023 11:16:45 GMT</pubDate>
+    </item>
+    <item>
+      <title>读埃隆马斯克传</title>
+      <link>https://frank2679.github.io/blog/202303-01-elon-mask</link>
+      <guid isPermaLink="true">https://frank2679.github.io/blog/202303-01-elon-mask</guid>
+      <description></description>
+      <pubDate>Tue, 28 Mar 2023 00:05:52 GMT</pubDate>
+    </item>
+    <item>
+      <title>保险一扫盲及初步配置</title>
+      <link>https://frank2679.github.io/blog/2023-02-insurance</link>
+      <guid isPermaLink="true">https://frank2679.github.io/blog/2023-02-insurance</guid>
+      <description></description>
+      <pubDate>Sun, 05 Feb 2023 12:44:41 GMT</pubDate>
+    </item>
+    <item>
+      <title>做 leader 一年了</title>
+      <link>https://frank2679.github.io/blog/leader_one_year</link>
+      <guid isPermaLink="true">https://frank2679.github.io/blog/leader_one_year</guid>
+      <description></description>
+      <pubDate>Sat, 07 Jan 2023 00:40:40 GMT</pubDate>
+    </item>
+  </channel>
+</rss>
