@@ -21,6 +21,15 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script is:inline>
+      (function () {
+        try {
+          var saved = localStorage.getItem('site-lang');
+          var lang = saved || (navigator.language && navigator.language.startsWith('zh') ? 'zh' : 'en');
+          document.documentElement.setAttribute('data-lang', lang);
+        } catch (e) {}
+      })();
+    </script>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
 

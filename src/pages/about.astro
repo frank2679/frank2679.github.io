@@ -14,7 +14,10 @@ import Footer from '../components/Footer.astro';
     <!-- Header -->
     <section class="page-header">
       <h1>Frank Young <span class="zh">杨行</span></h1>
-      <p class="subtitle">Senior Software Engineer · High-Performance Computing</p>
+      <p class="subtitle">
+        <span data-i18n="en">Senior Software Engineer · High-Performance Computing</span>
+        <span data-i18n="zh">高级软件工程师 · 高性能计算</span>
+      </p>
       <div class="contact-row">
         <a href="mailto:2679frank@gmail.com">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
@@ -37,19 +40,33 @@ import Footer from '../components/Footer.astro';
 
     <!-- Bio -->
     <section class="resume-section">
-      <h2 class="section-title">About</h2>
-      <p class="summary-text">
-        Senior software engineer with 9+ years building high-performance computation infrastructure for
-        heterogeneous platforms (CPU/GPU/DSP/NPU) — from BLAS and DNN acceleration libraries to GEMM
-        optimization and AI model deployment. Most of that work has been 0-to-1: picking the stack, standing
-        up the framework, and getting core operators into production.
-      </p>
-      <p class="summary-text">
-        Outside of work: triathlon — long-distance running, cycling, and swimming keep the mind sharp.
-      </p>
-      <p class="summary-text">
-        <a href="/resume">Full résumé (EN / 中文) →</a>
-      </p>
+      <h2 class="section-title"><span data-i18n="en">About</span><span data-i18n="zh">关于我</span></h2>
+      <div data-i18n="en">
+        <p class="summary-text">
+          Senior software engineer with 9+ years building high-performance computation infrastructure for
+          heterogeneous platforms (CPU/GPU/DSP/NPU) — from BLAS and DNN acceleration libraries to GEMM
+          optimization and AI model deployment. Most of that work has been 0-to-1: picking the stack, standing
+          up the framework, and getting core operators into production.
+        </p>
+        <p class="summary-text">
+          Outside of work: triathlon — long-distance running, cycling, and swimming keep the mind sharp.
+        </p>
+        <p class="summary-text">
+          <a href="/resume">Full résumé (EN / 中文) →</a>
+        </p>
+      </div>
+      <div data-i18n="zh">
+        <p class="summary-text">
+          高级软件工程师，拥有 9 年以上异构平台（CPU/GPU/DSP/NPU）高性能计算基础设施开发经验——涵盖 BLAS、DNN
+          加速库、GEMM 优化以及 AI 模型部署。大部分工作都是从 0 到 1：技术选型、框架搭建，并将核心算子推向生产环境。
+        </p>
+        <p class="summary-text">
+          工作之外：铁人三项爱好者，长距离跑步、骑行和游泳让头脑保持清醒。
+        </p>
+        <p class="summary-text">
+          <a href="/resume">完整简历（中/英）→</a>
+        </p>
+      </div>
     </section>
   </main>
 

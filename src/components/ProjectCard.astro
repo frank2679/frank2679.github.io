@@ -1,21 +1,42 @@
 ---
 interface Props {
-  title: string;
+  titleEn: string;
+  titleZh: string;
   period: string;
-  description: string;
+  descriptionEn: string;
+  descriptionZh: string;
   tags: string[];
-  highlights?: string[];
+  highlightsEn?: string[];
+  highlightsZh?: string[];
   link?: string;
 }
 
-const { title, period, description, tags, highlights = [], link } = Astro.props;
+const {
+  titleEn,
+  titleZh,
+  period,
+  descriptionEn,
+  descriptionZh,
+  tags,
+  highlightsEn = [],
+  highlightsZh = [],
+  link,
+} = Astro.props;
 ---
 
 <article class="project-card">
   <div class="card-header">
     <div>
       <h3 class="card-title">
-        {link ? <a href={link} target="_blank" rel="noopener noreferrer">{title}</a> : title}
+        {link ? (
+          <a href={link} target="_blank" rel="noopener noreferrer">
+            <span data-i18n="en">{titleEn}</span><span data-i18n="zh">{titleZh}</span>
+          </a>
+        ) : (
+          <>
+            <span data-i18n="en">{titleEn}</span><span data-i18n="zh">{titleZh}</span>
+          </>
+        )}
       </h3>
       <span class="period">{period}</span>
     </div>
@@ -30,11 +51,17 @@ const { title, period, description, tags, highlights = [], link } = Astro.props;
     )}
   </div>
 
-  <p class="desc">{description}</p>
+  <p class="desc" data-i18n="en">{descriptionEn}</p>
+  <p class="desc" data-i18n="zh">{descriptionZh}</p>
 
-  {highlights.length > 0 && (
-    <ul class="highlights">
-      {highlights.map((h) => <li>{h}</li>)}
+  {highlightsEn.length > 0 && (
+    <ul class="highlights" data-i18n="en">
+      {highlightsEn.map((h) => <li>{h}</li>)}
+    </ul>
+  )}
+  {highlightsZh.length > 0 && (
+    <ul class="highlights" data-i18n="zh">
+      {highlightsZh.map((h) => <li>{h}</li>)}
     </ul>
   )}
 

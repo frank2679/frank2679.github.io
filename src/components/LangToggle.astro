@@ -1,0 +1,22 @@
+---
+---
+
+<button id="lang-toggle" class="lang-toggle" type="button" aria-label="Switch site language / 切换语言">
+  <span class="lang-option" data-lang-btn="en">EN</span>
+  <span class="lang-divider">/</span>
+  <span class="lang-option" data-lang-btn="zh">中文</span>
+</button>
+
+<script>
+  document.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement;
+    const btn = target.closest('#lang-toggle');
+    if (!btn) return;
+    const current = document.documentElement.getAttribute('data-lang') || 'en';
+    const next = current === 'en' ? 'zh' : 'en';
+    document.documentElement.setAttribute('data-lang', next);
+    try {
+      localStorage.setItem('site-lang', next);
+    } catch (e) {}
+  });
+</script>

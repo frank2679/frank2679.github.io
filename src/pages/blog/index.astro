@@ -20,15 +20,18 @@ const allTags = [...new Set(posts.flatMap((p) => p.data.tags))].sort();
 
   <main class="container">
     <section class="page-header">
-      <h1>Blog</h1>
+      <h1><span data-i18n="en">Blog</span><span data-i18n="zh">博客</span></h1>
       <p class="subtitle">
-        Notes on HPC, C++, AI acceleration, and life. Mostly in Chinese (中文).
+        <span data-i18n="en">Notes on HPC, C++, AI acceleration, and life. Mostly in Chinese (中文).</span>
+        <span data-i18n="zh">关于 HPC、C++、AI 加速和生活的随笔，大多数文章为中文。</span>
       </p>
     </section>
 
     {allTags.length > 0 && (
       <div class="tag-bar">
-        <a href="#all" class="tag-filter active" data-tag-filter="all" aria-current="page">All</a>
+        <a href="#all" class="tag-filter active" data-tag-filter="all" aria-current="page">
+          <span data-i18n="en">All</span><span data-i18n="zh">全部</span>
+        </a>
         {allTags.map((tag) => (
           <a href={`#tag=${encodeURIComponent(tag)}`} class="tag-filter" data-tag-filter={tag}>{tag}</a>
         ))}
@@ -49,7 +52,10 @@ const allTags = [...new Set(posts.flatMap((p) => p.data.tags))].sort();
       ))}
     </div>
 
-    <p class="empty" hidden>No posts found for this tag. <a href="#all">Show all posts</a>.</p>
+    <p class="empty" hidden>
+      <span data-i18n="en">No posts found for this tag. <a href="#all">Show all posts</a>.</span>
+      <span data-i18n="zh">该标签下暂无文章。<a href="#all">显示全部文章</a>。</span>
+    </p>
   </main>
 
   <Footer />

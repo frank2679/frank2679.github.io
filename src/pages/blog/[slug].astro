@@ -40,7 +40,7 @@ const formatted = post.data.date.toLocaleDateString('en-US', {
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="m15 18-6-6 6-6"/>
             </svg>
-            All posts
+            <span data-i18n="en">All posts</span><span data-i18n="zh">全部文章</span>
           </a>
           <time datetime={post.data.date.toISOString()}>{formatted}</time>
         </div>
@@ -65,7 +65,7 @@ const formatted = post.data.date.toLocaleDateString('en-US', {
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="m15 18-6-6 6-6"/>
           </svg>
-          Back to all posts
+          <span data-i18n="en">Back to all posts</span><span data-i18n="zh">返回全部文章</span>
         </a>
       </footer>
     </article>

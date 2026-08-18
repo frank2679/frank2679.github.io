@@ -4,16 +4,6 @@ import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 ---
 
-<script is:inline>
-  (function () {
-    try {
-      var saved = localStorage.getItem('resume-lang');
-      var lang = saved || (navigator.language && navigator.language.startsWith('zh') ? 'zh' : 'en');
-      document.documentElement.setAttribute('data-resume-lang', lang);
-    } catch (e) {}
-  })();
-</script>
-
 <BaseLayout
   title="Resume — Frank Young"
   description="Frank Young's resume — Senior Software Engineer specializing in high-performance computing and AI acceleration. Available in English and Chinese."
@@ -21,16 +11,8 @@ import Footer from '../components/Footer.astro';
   <Nav />
 
   <main class="container">
-    <div class="lang-toggle-row">
-      <button id="lang-toggle" class="lang-toggle" aria-label="Switch resume language">
-        <span class="lang-option" data-lang-btn="en">EN</span>
-        <span class="lang-divider">/</span>
-        <span class="lang-option" data-lang-btn="zh">中文</span>
-      </button>
-    </div>
-
     <!-- ==================== ENGLISH ==================== -->
-    <div class="resume-lang" data-lang="en">
+    <div class="resume-lang" data-i18n="en">
       <section class="page-header">
         <h1>Frank Young</h1>
         <p class="subtitle">Senior Software Engineer · High-Performance Computing</p>
@@ -286,7 +268,7 @@ import Footer from '../components/Footer.astro';
     </div>
 
     <!-- ==================== 中文 ==================== -->
-    <div class="resume-lang" data-lang="zh">
+    <div class="resume-lang" data-i18n="zh">
       <section class="page-header">
         <h1>杨行</h1>
         <p class="subtitle">高级软件工程师 · 高性能计算</p>
@@ -545,76 +527,10 @@ import Footer from '../components/Footer.astro';
   <Footer />
 </BaseLayout>
 
-<script is:inline>
-  document.addEventListener('click', function (e) {
-    var btn = e.target.closest('#lang-toggle');
-    if (!btn) return;
-    var current = document.documentElement.getAttribute('data-resume-lang') || 'en';
-    var next = current === 'en' ? 'zh' : 'en';
-    document.documentElement.setAttribute('data-resume-lang', next);
-    try {
-      localStorage.setItem('resume-lang', next);
-    } catch (e) {}
-  });
-</script>
-
 <style>
   main {
     padding-top: 2rem;
     padding-bottom: 4rem;
-  }
-
-  /* Language toggle */
-  .lang-toggle-row {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 1.5rem;
-  }
-
-  .lang-toggle {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    padding: 0.4rem 0.9rem;
-    cursor: pointer;
-    font-family: var(--font-mono);
-    font-size: 0.85rem;
-  }
-
-  .lang-toggle:hover {
-    border-color: var(--accent);
-  }
-
-  .lang-option {
-    color: var(--text-muted);
-    transition: color 0.2s;
-  }
-
-  .lang-divider {
-    color: var(--text-muted);
-  }
-
-  :root:not([data-resume-lang='zh']) .lang-option[data-lang-btn='en'],
-  :root[data-resume-lang='en'] .lang-option[data-lang-btn='en'] {
-    color: var(--accent);
-    font-weight: 600;
-  }
-
-  :root[data-resume-lang='zh'] .lang-option[data-lang-btn='zh'] {
-    color: var(--accent);
-    font-weight: 600;
-  }
-
-  /* Show/hide language blocks */
-  :root:not([data-resume-lang='zh']) .resume-lang[data-lang='zh'] {
-    display: none;
-  }
-
-  :root[data-resume-lang='zh'] .resume-lang[data-lang='en'] {
-    display: none;
   }
 
   .page-header {

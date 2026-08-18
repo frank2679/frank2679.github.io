@@ -1,34 +1,39 @@
 ---
+import LangToggle from './LangToggle.astro';
+
 const currentPath = Astro.url.pathname;
 
 const links = [
-  { href: '/', label: 'Home' },
-  { href: '/about', label: 'About' },
-  { href: '/resume', label: 'Resume' },
-  { href: '/projects', label: 'Projects' },
-  { href: '/blog', label: 'Blog' },
+  { href: '/', en: 'Home', zh: '首页' },
+  { href: '/about', en: 'About', zh: '关于' },
+  { href: '/resume', en: 'Resume', zh: '简历' },
+  { href: '/projects', en: 'Projects', zh: '项目' },
+  { href: '/blog', en: 'Blog', zh: '博客' },
 ];
 ---
 
 <nav>
   <div class="nav-inner">
     <a href="/" class="logo">Frank Young</a>
-    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation">
-      <span class="menu-toggle-label">Menu</span>
-      <span class="menu-icon" aria-hidden="true"></span>
-    </button>
-    <ul id="primary-navigation" class="nav-links">
-      {links.map(({ href, label }) => (
-        <li>
-          <a
-            href={href}
-            class:list={['nav-link', { active: currentPath === href || (href !== '/' && currentPath.startsWith(href)) }]}
-          >
-            {label}
-          </a>
-        </li>
-      ))}
-    </ul>
+    <div class="nav-right">
+      <ul id="primary-navigation" class="nav-links">
+        {links.map(({ href, en, zh }) => (
+          <li>
+            <a
+              href={href}
+              class:list={['nav-link', { active: currentPath === href || (href !== '/' && currentPath.startsWith(href)) }]}
+            >
+              <span data-i18n="en">{en}</span><span data-i18n="zh">{zh}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+      <LangToggle />
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation">
+        <span class="menu-toggle-label">Menu</span>
+        <span class="menu-icon" aria-hidden="true"></span>
+      </button>
+    </div>
   </div>
 </nav>
 
@@ -83,6 +88,12 @@ const links = [
 
   .logo:hover {
     color: var(--accent);
+  }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
   }
 
   .nav-links {

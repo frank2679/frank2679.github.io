@@ -163,6 +163,52 @@ tr:nth-child(even) {
   color: var(--accent-hover);
 }
 
+/* Bilingual content toggle — controlled by [data-lang] on <html> */
+:root:not([data-lang='zh']) [data-i18n='zh'] {
+  display: none;
+}
+
+:root[data-lang='zh'] [data-i18n='en'] {
+  display: none;
+}
+
+.lang-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.4rem 0.9rem;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+}
+
+.lang-toggle:hover {
+  border-color: var(--accent);
+}
+
+.lang-option {
+  color: var(--text-muted);
+  transition: color 0.2s;
+}
+
+.lang-divider {
+  color: var(--text-muted);
+}
+
+:root:not([data-lang='zh']) .lang-option[data-lang-btn='en'],
+:root[data-lang='en'] .lang-option[data-lang-btn='en'] {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+:root[data-lang='zh'] .lang-option[data-lang-btn='zh'] {
+  color: var(--accent);
+  font-weight: 600;
+}
+
 @media (max-width: 640px) {
   body {
     font-size: 15px;
