@@ -5,6 +5,8 @@ tags: [code-quality, testing, static-analysis, engineering, AI-coding]
 description: "写给工程团队和 AI-assisted development 实践者的代码质量度量指南。"
 ---
 
+> **本文由 AI（Claude）辅助生成**，经人工审阅后发布。
+>
 > 写给工程团队和 AI-assisted development 实践者的代码质量度量指南。
 
 ---
