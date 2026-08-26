@@ -6,6 +6,13 @@
     <description>Technical writing on HPC, C++, AI acceleration, and engineering.</description>
     <language>en</language>
     <item>
+      <title>如何衡量代码质量：指标、工具与业界实践</title>
+      <link>https://frank2679.github.io/blog/20260826-code-quality-metrics</link>
+      <guid isPermaLink="true">https://frank2679.github.io/blog/20260826-code-quality-metrics</guid>
+      <description>写给工程团队和 AI-assisted development 实践者的代码质量度量指南。</description>
+      <pubDate>Wed, 26 Aug 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
       <title>Harness Engineering 与 Loop Engineering 深度调研报告</title>
       <link>https://frank2679.github.io/blog/20260618-harness-loop-engineering</link>
       <guid isPermaLink="true">https://frank2679.github.io/blog/20260618-harness-loop-engineering</guid>
