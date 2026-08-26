@@ -1,7 +1,7 @@
 ---
 title: "如何衡量代码质量：指标、工具与业界实践"
 date: 2026-08-26
-tags: [code-quality, testing, static-analysis, engineering, AI-coding]
+tags: [code-quality, testing, static-analysis, engineering, AI-coding, AI-generated]
 description: "写给工程团队和 AI-assisted development 实践者的代码质量度量指南。"
 ---
 
