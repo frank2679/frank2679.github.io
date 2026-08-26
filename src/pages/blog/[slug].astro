@@ -17,7 +17,9 @@ interface Props {
 }
 
 const { post } = Astro.props;
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
+
+const toc = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
 
 const formatted = post.data.date.toLocaleDateString('en-US', {
   year: 'numeric',
@@ -32,52 +34,177 @@ const formatted = post.data.date.toLocaleDateString('en-US', {
 >
   <Nav />
 
-  <main class="container">
-    <article>
-      <header class="post-header">
-        <div class="post-meta">
+  <main>
+    <div class:list={['layout', { 'with-toc': toc.length > 2 }]}>
+      <article>
+        <header class="post-header">
+          <div class="post-meta">
+            <a href="/blog" class="back-link">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m15 18-6-6 6-6"/>
+              </svg>
+              <span data-i18n="en">All posts</span><span data-i18n="zh">全部文章</span>
+            </a>
+            <time datetime={post.data.date.toISOString()}>{formatted}</time>
+          </div>
+
+          <h1>{post.data.title}</h1>
+
+          {post.data.tags.length > 0 && (
+            <div class="tags">
+              {post.data.tags.map((tag) => (
+                <span class="tag">{tag}</span>
+              ))}
+            </div>
+          )}
+        </header>
+
+        <div class="prose">
+          <Content />
+        </div>
+
+        <footer class="post-footer">
           <a href="/blog" class="back-link">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="m15 18-6-6 6-6"/>
             </svg>
-            <span data-i18n="en">All posts</span><span data-i18n="zh">全部文章</span>
+            <span data-i18n="en">Back to all posts</span><span data-i18n="zh">返回全部文章</span>
           </a>
-          <time datetime={post.data.date.toISOString()}>{formatted}</time>
-        </div>
+        </footer>
+      </article>
 
-        <h1>{post.data.title}</h1>
-
-        {post.data.tags.length > 0 && (
-          <div class="tags">
-            {post.data.tags.map((tag) => (
-              <span class="tag">{tag}</span>
-            ))}
-          </div>
-        )}
-      </header>
-
-      <div class="prose">
-        <Content />
-      </div>
-
-      <footer class="post-footer">
-        <a href="/blog" class="back-link">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="m15 18-6-6 6-6"/>
-          </svg>
-          <span data-i18n="en">Back to all posts</span><span data-i18n="zh">返回全部文章</span>
-        </a>
-      </footer>
-    </article>
+      {toc.length > 2 && (
+        <aside class="toc-sidebar" aria-label="Table of contents">
+          <nav>
+            <p class="toc-title"><span data-i18n="en">On this page</span><span data-i18n="zh">本页目录</span></p>
+            <ul id="toc-list">
+              {toc.map((h) => (
+                <li class={`toc-level-${h.depth}`}>
+                  <a href={`#${h.slug}`} data-slug={h.slug}>{h.text}</a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </aside>
+      )}
+    </div>
   </main>
 
   <Footer />
 </BaseLayout>
 
+{toc.length > 2 && (
+  <script>
+    const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('#toc-list a'));
+    const targets = links
+      .map((link) => document.getElementById(link.dataset.slug ?? ''))
+      .filter((el): el is HTMLElement => el !== null);
+
+    if (targets.length > 0) {
+      const setActive = (slug: string | null) => {
+        for (const link of links) {
+          link.classList.toggle('active', slug !== null && link.dataset.slug === slug);
+        }
+      };
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          const visible = entries
+            .filter((entry) => entry.isIntersecting)
+            .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+
+          if (visible.length > 0) {
+            setActive(visible[0].target.id);
+          }
+        },
+        { rootMargin: '-100px 0px -70% 0px', threshold: 0 }
+      );
+
+      for (const target of targets) observer.observe(target);
+    }
+  </script>
+)}
+
 <style>
   main {
     padding-top: 3rem;
     padding-bottom: 4rem;
+  }
+
+  .layout {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  .layout.with-toc {
+    max-width: 1120px;
+    display: grid;
+    grid-template-columns: minmax(0, 860px) 220px;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  .toc-sidebar {
+    position: sticky;
+    top: 2rem;
+  }
+
+  .toc-title {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin-bottom: 0.9rem;
+  }
+
+  .toc-sidebar nav {
+    border-left: 1px solid var(--border);
+    padding-left: 1rem;
+  }
+
+  .toc-sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    max-height: calc(100vh - 6rem);
+    overflow-y: auto;
+  }
+
+  .toc-sidebar a {
+    display: block;
+    color: var(--text-secondary);
+    font-size: 0.83rem;
+    line-height: 1.4;
+    transition: color 0.15s;
+  }
+
+  .toc-sidebar a:hover {
+    color: var(--accent);
+  }
+
+  .toc-sidebar a.active {
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .toc-level-3 {
+    padding-left: 0.9rem;
+  }
+
+  @media (max-width: 1080px) {
+    .layout.with-toc {
+      grid-template-columns: 1fr;
+      max-width: var(--max-w);
+    }
+
+    .toc-sidebar {
+      display: none;
+    }
   }
 
   .post-header {
