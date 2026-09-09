@@ -4,6 +4,11 @@ on:
   push:
     branches:
       - master
+  schedule:
+    # Re-syncs the resume PDFs from resume-ng and redeploys, so a resume
+    # update there shows up here without touching this repo.
+    - cron: '0 3 * * *'
+  workflow_dispatch: {}
 
 permissions:
   contents: write
@@ -27,6 +32,8 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v4
