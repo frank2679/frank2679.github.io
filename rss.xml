@@ -6,6 +6,13 @@
     <description>Technical writing on HPC, C++, AI acceleration, and engineering.</description>
     <language>en</language>
     <item>
+      <title>面试准备方法论：内容、表达与刻意练习</title>
+      <link>https://frank2679.github.io/blog/20260909-interview-preparation-methodology</link>
+      <guid isPermaLink="true">https://frank2679.github.io/blog/20260909-interview-preparation-methodology</guid>
+      <description>一套程序员求职的系统化面试准备方法论：内容积累、算法/GPU coding/系统设计训练，以及 storytelling 表达框架。</description>
+      <pubDate>Wed, 09 Sep 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
       <title>如何衡量代码质量：指标、工具与业界实践</title>
       <link>https://frank2679.github.io/blog/20260826-code-quality-metrics</link>
       <guid isPermaLink="true">https://frank2679.github.io/blog/20260826-code-quality-metrics</guid>
