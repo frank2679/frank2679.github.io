@@ -10,7 +10,11 @@ import Footer from '../components/Footer.astro';
 // served same-origin — no third-party CDN in the request path for visitors.
 const REPO_URL = 'https://github.com/frank2679/resume-ng/tree/main/resume_release';
 
-let resumeMeta: { en?: { date: string; sourceName: string }; cn?: { date: string; sourceName: string } } | null = null;
+let resumeMeta: {
+  syncedAt?: string;
+  en?: { date: string; sourceName: string };
+  cn?: { date: string; sourceName: string };
+} | null = null;
 try {
   const raw = fs.readFileSync(path.join(process.cwd(), 'public', 'resume', 'meta.json'), 'utf-8');
   resumeMeta = JSON.parse(raw);
@@ -24,8 +28,16 @@ function versionLabel(lang: 'en' | 'cn', prefix: string) {
   return `${prefix} ${entry.date.slice(0, 4)}-${entry.date.slice(4)}`;
 }
 
+function formatSyncedAt(iso: string | undefined) {
+  if (!iso) return null;
+  const [datePart, timePart] = iso.split('T');
+  if (!datePart || !timePart) return null;
+  return `${datePart} ${timePart.slice(0, 5)} UTC`;
+}
+
 const enEntry = resumeMeta?.en ?? null;
 const cnEntry = resumeMeta?.cn ?? null;
+const syncedAtLabel = formatSyncedAt(resumeMeta?.syncedAt);
 ---
 
 <BaseLayout
@@ -62,31 +74,28 @@ const cnEntry = resumeMeta?.cn ?? null;
 
       <section class="pdf-section">
         <div class="pdf-toolbar">
-          {enEntry ? (
-            <span class="pdf-version">{versionLabel('en', 'Latest version ·')}</span>
-          ) : (
-            <span class="pdf-version">Resume preview unavailable — <a href={REPO_URL} target="_blank" rel="noopener noreferrer">view source repository →</a></span>
-          )}
-          <div class="pdf-actions">
-            {enEntry && (
-              <button type="button" class="pdf-fullscreen-btn" data-fullscreen-target="pdf-frame-wrap-en">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
-                Fullscreen
-              </button>
+          <div class="pdf-meta-text">
+            {enEntry ? (
+              <>
+                <span class="pdf-version">{versionLabel('en', 'Latest version ·')}</span>
+                {syncedAtLabel && <span class="pdf-synced">{enEntry.sourceName} · synced {syncedAtLabel}</span>}
+              </>
+            ) : (
+              <span class="pdf-version">Resume preview unavailable — <a href={REPO_URL} target="_blank" rel="noopener noreferrer">view source repository →</a></span>
             )}
-            <a
-              class="pdf-download-btn"
-              href={enEntry ? '/resume/resume-en.pdf' : REPO_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              download={enEntry ? enEntry.sourceName : undefined}
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-              Download PDF
-            </a>
           </div>
+          <a
+            class="pdf-download-btn"
+            href={enEntry ? '/resume/resume-en.pdf' : REPO_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            download={enEntry ? enEntry.sourceName : undefined}
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download PDF
+          </a>
         </div>
-        <div class="pdf-frame-wrap" id="pdf-frame-wrap-en">
+        <div class="pdf-frame-wrap">
           {enEntry ? (
             <iframe class="pdf-frame" src="/resume/resume-en.pdf" title="Frank Young Resume (English)" loading="lazy"></iframe>
           ) : (
@@ -123,31 +132,28 @@ const cnEntry = resumeMeta?.cn ?? null;
 
       <section class="pdf-section">
         <div class="pdf-toolbar">
-          {cnEntry ? (
-            <span class="pdf-version">{versionLabel('cn', '最新版本 ·')}</span>
-          ) : (
-            <span class="pdf-version">简历预览暂不可用 — <a href={REPO_URL} target="_blank" rel="noopener noreferrer">前往源仓库查看 →</a></span>
-          )}
-          <div class="pdf-actions">
-            {cnEntry && (
-              <button type="button" class="pdf-fullscreen-btn" data-fullscreen-target="pdf-frame-wrap-cn">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
-                全屏
-              </button>
+          <div class="pdf-meta-text">
+            {cnEntry ? (
+              <>
+                <span class="pdf-version">{versionLabel('cn', '最新版本 ·')}</span>
+                {syncedAtLabel && <span class="pdf-synced">{cnEntry.sourceName} · 同步于 {syncedAtLabel}</span>}
+              </>
+            ) : (
+              <span class="pdf-version">简历预览暂不可用 — <a href={REPO_URL} target="_blank" rel="noopener noreferrer">前往源仓库查看 →</a></span>
             )}
-            <a
-              class="pdf-download-btn"
-              href={cnEntry ? '/resume/resume-cn.pdf' : REPO_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              download={cnEntry ? cnEntry.sourceName : undefined}
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-              下载 PDF
-            </a>
           </div>
+          <a
+            class="pdf-download-btn"
+            href={cnEntry ? '/resume/resume-cn.pdf' : REPO_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            download={cnEntry ? cnEntry.sourceName : undefined}
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            下载 PDF
+          </a>
         </div>
-        <div class="pdf-frame-wrap" id="pdf-frame-wrap-cn">
+        <div class="pdf-frame-wrap">
           {cnEntry ? (
             <iframe class="pdf-frame" src="/resume/resume-cn.pdf" title="杨行简历（中文）" loading="lazy"></iframe>
           ) : (
@@ -160,22 +166,6 @@ const cnEntry = resumeMeta?.cn ?? null;
 
   <Footer />
 </BaseLayout>
-
-<script>
-  document.addEventListener('click', (e) => {
-    const target = e.target as HTMLElement;
-    const btn = target.closest('[data-fullscreen-target]') as HTMLElement | null;
-    if (!btn) return;
-    const id = btn.getAttribute('data-fullscreen-target');
-    const el = id ? document.getElementById(id) : null;
-    if (!el) return;
-    if (document.fullscreenElement) {
-      document.exitFullscreen();
-    } else {
-      el.requestFullscreen?.();
-    }
-  });
-</script>
 
 <style>
   main {
@@ -239,6 +229,12 @@ const cnEntry = resumeMeta?.cn ?? null;
     flex-wrap: wrap;
   }
 
+  .pdf-meta-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
   .pdf-version {
     color: var(--text-muted);
     font-family: var(--font-mono);
@@ -249,14 +245,14 @@ const cnEntry = resumeMeta?.cn ?? null;
     color: var(--accent);
   }
 
-  .pdf-actions {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
+  .pdf-synced {
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    opacity: 0.75;
   }
 
-  .pdf-download-btn,
-  .pdf-fullscreen-btn {
+  .pdf-download-btn {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
@@ -267,9 +263,6 @@ const cnEntry = resumeMeta?.cn ?? null;
     font-weight: 500;
     cursor: pointer;
     transition: background 0.2s, color 0.2s;
-  }
-
-  .pdf-download-btn {
     background: var(--accent-dim);
     color: var(--accent);
     border: 1px solid var(--accent);
@@ -278,17 +271,6 @@ const cnEntry = resumeMeta?.cn ?? null;
   .pdf-download-btn:hover {
     background: var(--accent);
     color: var(--bg-primary);
-  }
-
-  .pdf-fullscreen-btn {
-    background: transparent;
-    color: var(--text-secondary);
-    border: 1px solid var(--border);
-  }
-
-  .pdf-fullscreen-btn:hover {
-    color: var(--text-primary);
-    border-color: var(--text-secondary);
   }
 
   .pdf-frame-wrap {
@@ -301,12 +283,6 @@ const cnEntry = resumeMeta?.cn ?? null;
     display: flex;
     align-items: center;
     justify-content: center;
-  }
-
-  .pdf-frame-wrap:fullscreen {
-    height: 100vh;
-    border-radius: 0;
-    border: none;
   }
 
   .pdf-frame {
