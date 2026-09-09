@@ -84,16 +84,6 @@ const syncedAtLabel = formatSyncedAt(resumeMeta?.syncedAt);
               <span class="pdf-version">Resume preview unavailable — <a href={REPO_URL} target="_blank" rel="noopener noreferrer">view source repository →</a></span>
             )}
           </div>
-          <a
-            class="pdf-download-btn"
-            href={enEntry ? '/resume/resume-en.pdf' : REPO_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            download={enEntry ? enEntry.sourceName : undefined}
-          >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            Download PDF
-          </a>
         </div>
         <div class="pdf-frame-wrap">
           {enEntry ? (
@@ -142,16 +132,6 @@ const syncedAtLabel = formatSyncedAt(resumeMeta?.syncedAt);
               <span class="pdf-version">简历预览暂不可用 — <a href={REPO_URL} target="_blank" rel="noopener noreferrer">前往源仓库查看 →</a></span>
             )}
           </div>
-          <a
-            class="pdf-download-btn"
-            href={cnEntry ? '/resume/resume-cn.pdf' : REPO_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            download={cnEntry ? cnEntry.sourceName : undefined}
-          >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            下载 PDF
-          </a>
         </div>
         <div class="pdf-frame-wrap">
           {cnEntry ? (
@@ -250,27 +230,6 @@ const syncedAtLabel = formatSyncedAt(resumeMeta?.syncedAt);
     font-family: var(--font-mono);
     font-size: 0.7rem;
     opacity: 0.75;
-  }
-
-  .pdf-download-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    border-radius: var(--radius);
-    font-family: var(--font-mono);
-    font-size: 0.85rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background 0.2s, color 0.2s;
-    background: var(--accent-dim);
-    color: var(--accent);
-    border: 1px solid var(--accent);
-  }
-
-  .pdf-download-btn:hover {
-    background: var(--accent);
-    color: var(--bg-primary);
   }
 
   .pdf-frame-wrap {
