@@ -12,7 +12,7 @@
     "sync:resume": "node scripts/sync-resume.mjs"
   },
   "dependencies": {
-    "astro": "^5.0.0",
+    "astro": "^7.3.1",
     "@astrojs/sitemap": "^3.0.0"
   }
 }
