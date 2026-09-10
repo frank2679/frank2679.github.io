@@ -96,7 +96,13 @@ const syncedAtLabel = formatSyncedAt(resumeMeta?.syncedAt);
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
           </button>
           {enEntry ? (
-            <iframe class="pdf-frame" src="/resume/resume-en.pdf" title="Frank Young Resume (English)" loading="lazy"></iframe>
+            <>
+              <iframe class="pdf-frame pdf-frame-desktop" src="/resume/resume-en.pdf" title="Frank Young Resume (English)" loading="lazy"></iframe>
+              <div class="pdf-mobile-fallback">
+                <p>Embedded PDF preview may not scroll past page 1 on some mobile browsers.</p>
+                <a href="/resume/resume-en.pdf" target="_blank" rel="noopener noreferrer" class="pdf-mobile-open-btn">Open full resume in new tab →</a>
+              </div>
+            </>
           ) : (
             <p class="pdf-status">Resume preview isn't available right now. Please check back later.</p>
           )}
@@ -153,7 +159,13 @@ const syncedAtLabel = formatSyncedAt(resumeMeta?.syncedAt);
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
           </button>
           {cnEntry ? (
-            <iframe class="pdf-frame" src="/resume/resume-cn.pdf" title="杨行简历（中文）" loading="lazy"></iframe>
+            <>
+              <iframe class="pdf-frame pdf-frame-desktop" src="/resume/resume-cn.pdf" title="杨行简历（中文）" loading="lazy"></iframe>
+              <div class="pdf-mobile-fallback">
+                <p>部分手机浏览器内嵌预览可能无法翻页查看第 2 页及之后的内容。</p>
+                <a href="/resume/resume-cn.pdf" target="_blank" rel="noopener noreferrer" class="pdf-mobile-open-btn">在新标签页打开完整简历 →</a>
+              </div>
+            </>
           ) : (
             <p class="pdf-status">简历预览暂不可用,请稍后再试。</p>
           )}
@@ -366,9 +378,51 @@ const syncedAtLabel = formatSyncedAt(resumeMeta?.syncedAt);
     padding: 0 1.5rem;
   }
 
+  .pdf-mobile-fallback {
+    display: none;
+  }
+
+  .pdf-mobile-open-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.2rem;
+    background: var(--accent-dim);
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: var(--radius);
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
   @media (max-width: 640px) {
     .pdf-frame-wrap {
       height: clamp(460px, 75vh, 900px);
+    }
+
+    .pdf-frame-desktop {
+      display: none;
+    }
+
+    .pdf-mobile-fallback {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      padding: 0 2rem;
+      text-align: center;
+    }
+
+    .pdf-mobile-fallback p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      max-width: 32ch;
+    }
+
+    .pdf-fullscreen-btn {
+      display: none;
     }
   }
 </style>
