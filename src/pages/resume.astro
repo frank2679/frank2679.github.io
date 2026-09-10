@@ -92,6 +92,9 @@ const syncedAtLabel = formatSyncedAt(resumeMeta?.syncedAt);
           )}
         </div>
         <div class="pdf-frame-wrap" id="pdf-frame-wrap-en">
+          <button type="button" class="pdf-close-btn" data-fullscreen-close aria-label="Exit fullscreen">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
           {enEntry ? (
             <iframe class="pdf-frame" src="/resume/resume-en.pdf" title="Frank Young Resume (English)" loading="lazy"></iframe>
           ) : (
@@ -146,6 +149,9 @@ const syncedAtLabel = formatSyncedAt(resumeMeta?.syncedAt);
           )}
         </div>
         <div class="pdf-frame-wrap" id="pdf-frame-wrap-cn">
+          <button type="button" class="pdf-close-btn" data-fullscreen-close aria-label="退出全屏">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
           {cnEntry ? (
             <iframe class="pdf-frame" src="/resume/resume-cn.pdf" title="杨行简历（中文）" loading="lazy"></iframe>
           ) : (
@@ -160,18 +166,35 @@ const syncedAtLabel = formatSyncedAt(resumeMeta?.syncedAt);
 </BaseLayout>
 
 <script>
+  // iOS Safari (and some other mobile browsers) never implemented the
+  // Fullscreen API for arbitrary elements, so requestFullscreen() silently
+  // no-ops there. A CSS-only "pseudo-fullscreen" overlay works everywhere.
+  function setExpanded(el: HTMLElement, expanded: boolean) {
+    el.classList.toggle('is-expanded', expanded);
+    document.body.style.overflow = expanded ? 'hidden' : '';
+  }
+
   document.addEventListener('click', (e) => {
     const target = e.target as HTMLElement;
-    const btn = target.closest('[data-fullscreen-target]') as HTMLElement | null;
-    if (!btn) return;
-    const id = btn.getAttribute('data-fullscreen-target');
-    const el = id ? document.getElementById(id) : null;
-    if (!el) return;
-    if (document.fullscreenElement) {
-      document.exitFullscreen();
-    } else {
-      el.requestFullscreen?.();
+
+    const openBtn = target.closest('[data-fullscreen-target]') as HTMLElement | null;
+    if (openBtn) {
+      const id = openBtn.getAttribute('data-fullscreen-target');
+      const el = id ? document.getElementById(id) : null;
+      if (el) setExpanded(el, !el.classList.contains('is-expanded'));
+      return;
     }
+
+    const closeBtn = target.closest('[data-fullscreen-close]') as HTMLElement | null;
+    if (closeBtn) {
+      const wrap = closeBtn.closest('.pdf-frame-wrap') as HTMLElement | null;
+      if (wrap) setExpanded(wrap, false);
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    document.querySelectorAll<HTMLElement>('.pdf-frame-wrap.is-expanded').forEach((el) => setExpanded(el, false));
   });
 </script>
 
@@ -293,10 +316,41 @@ const syncedAtLabel = formatSyncedAt(resumeMeta?.syncedAt);
     justify-content: center;
   }
 
-  .pdf-frame-wrap:fullscreen {
+  .pdf-frame-wrap.is-expanded {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    width: 100vw;
     height: 100vh;
+    height: 100dvh;
     border-radius: 0;
     border: none;
+  }
+
+  .pdf-close-btn {
+    display: none;
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    z-index: 2;
+    width: 2.25rem;
+    height: 2.25rem;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    cursor: pointer;
+  }
+
+  .pdf-close-btn:hover {
+    color: var(--text-primary);
+    border-color: var(--text-secondary);
+  }
+
+  .pdf-frame-wrap.is-expanded .pdf-close-btn {
+    display: flex;
   }
 
   .pdf-frame {
