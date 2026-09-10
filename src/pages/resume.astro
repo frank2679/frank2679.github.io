@@ -84,8 +84,14 @@ const syncedAtLabel = formatSyncedAt(resumeMeta?.syncedAt);
               <span class="pdf-version">Resume preview unavailable — <a href={REPO_URL} target="_blank" rel="noopener noreferrer">view source repository →</a></span>
             )}
           </div>
+          {enEntry && (
+            <button type="button" class="pdf-fullscreen-btn" data-fullscreen-target="pdf-frame-wrap-en">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+              Fullscreen
+            </button>
+          )}
         </div>
-        <div class="pdf-frame-wrap">
+        <div class="pdf-frame-wrap" id="pdf-frame-wrap-en">
           {enEntry ? (
             <iframe class="pdf-frame" src="/resume/resume-en.pdf" title="Frank Young Resume (English)" loading="lazy"></iframe>
           ) : (
@@ -132,8 +138,14 @@ const syncedAtLabel = formatSyncedAt(resumeMeta?.syncedAt);
               <span class="pdf-version">简历预览暂不可用 — <a href={REPO_URL} target="_blank" rel="noopener noreferrer">前往源仓库查看 →</a></span>
             )}
           </div>
+          {cnEntry && (
+            <button type="button" class="pdf-fullscreen-btn" data-fullscreen-target="pdf-frame-wrap-cn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+              全屏
+            </button>
+          )}
         </div>
-        <div class="pdf-frame-wrap">
+        <div class="pdf-frame-wrap" id="pdf-frame-wrap-cn">
           {cnEntry ? (
             <iframe class="pdf-frame" src="/resume/resume-cn.pdf" title="杨行简历（中文）" loading="lazy"></iframe>
           ) : (
@@ -146,6 +158,22 @@ const syncedAtLabel = formatSyncedAt(resumeMeta?.syncedAt);
 
   <Footer />
 </BaseLayout>
+
+<script>
+  document.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement;
+    const btn = target.closest('[data-fullscreen-target]') as HTMLElement | null;
+    if (!btn) return;
+    const id = btn.getAttribute('data-fullscreen-target');
+    const el = id ? document.getElementById(id) : null;
+    if (!el) return;
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    } else {
+      el.requestFullscreen?.();
+    }
+  });
+</script>
 
 <style>
   main {
@@ -232,6 +260,27 @@ const syncedAtLabel = formatSyncedAt(resumeMeta?.syncedAt);
     opacity: 0.75;
   }
 
+  .pdf-fullscreen-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+  }
+
+  .pdf-fullscreen-btn:hover {
+    color: var(--text-primary);
+    border-color: var(--text-secondary);
+  }
+
   .pdf-frame-wrap {
     position: relative;
     background: var(--bg-card);
@@ -242,6 +291,12 @@ const syncedAtLabel = formatSyncedAt(resumeMeta?.syncedAt);
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  .pdf-frame-wrap:fullscreen {
+    height: 100vh;
+    border-radius: 0;
+    border: none;
   }
 
   .pdf-frame {
