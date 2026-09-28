@@ -16,3 +16,4 @@ This is an **Astro** project — not Hexo. Ignore any legacy Hexo instructions y
 
 - Targets must work on free tiers and on iOS Safari.
 - Avoid the Fullscreen API (unsupported on iOS Safari), iframe PDF embeds on mobile (only render one page there), and paid Cloudflare features (e.g. public preview URLs require a paid plan).
+- `main` is the sole trunk: GitHub's default branch, and `.github/workflows/deploy.yml` triggers on push to `main` (build + publish to `gh-pages`, plus a daily cron to resync the resume PDF from `resume-ng`). `.github/workflows/ci.yml` runs a build-only check on every PR into `main`. (As of 2026-09-29: previously `deploy.yml` watched a stale `master` branch while GitHub's default branch had already been switched to `main`, so merges silently stopped deploying — reconciled by merging master's history into main and repointing deploy.yml. `master` is no longer used; don't target it.)
