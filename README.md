@@ -34,15 +34,6 @@ npm run preview  # 预览 build 产物
 
 ## 评论与阅读数（Waline）
 
-文章页底部的评论区和标题旁的阅读数由 [Waline](https://waline.js.org) 提供，后端单独部署在 Vercel（免费套餐）+ Neon PostgreSQL（免费套餐）上。前端只需配置一个地址：`src/config/waline.ts` 里的 `WALINE_SERVER_URL`，留空则评论区和阅读数都不渲染。
+文章页底部的评论区和标题旁的阅读数由 [Waline](https://waline.js.org) 提供，后端部署在 Vercel + Neon（免费套餐）。前端唯一的配置是 `src/config/waline.ts` 里的 `WALINE_SERVER_URL`，留空就整体关闭。
 
-后端部署步骤（参考 [官方文档](https://waline.js.org/guide/get-started/)）：
-
-1. 用官方模板一键部署到 Vercel，项目名随意。
-2. Vercel 项目 → **Storage** → **Create Database** → 选 **Neon**，按默认配置创建。
-3. 在 Neon 的 **SQL Editor** 里执行 Waline 仓库 `assets/waline.pgsql` 的建表语句。
-4. 回到 Vercel **Redeploy**，打开部署地址即为 `serverURL`，填进 `src/config/waline.ts`。
-5. 访问 `<serverURL>/ui/register` 注册，第一个注册的账号是管理员；在后台可审核/删除评论。
-6. 建议在 Vercel 环境变量里配置：`SITE_NAME`、`SITE_URL=https://frank2679.github.io`、`SECURE_DOMAINS=frank2679.github.io`（只允许本站调用），以及邮件通知相关的 `SMTP_*`、`AUTHOR_EMAIL`。改完环境变量需要 Redeploy。
-
-每篇文章的评论和阅读数以 `/blog/<slug>/` 为键存储，修改文章 slug 会让该文已有的评论和阅读数“丢失”（数据仍在库里，只是对不上新路径）。
+搭建过程、环境变量、备份、升级和故障排查见 **[docs/waline.md](docs/waline.md)**。
