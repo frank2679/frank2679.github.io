@@ -85,7 +85,7 @@
 
 | 需求 | 变量 |
 |---|---|
-| 新评论发邮件通知 | `SMTP_SERVICE`（如 `Gmail`）、`SMTP_USER`、`SMTP_PASS`（Gmail 要用"应用专用密码"）、`AUTHOR_EMAIL` |
+| 新评论发邮件通知 | `SMTP_SERVICE`、`SMTP_USER`、`SMTP_PASS`、`AUTHOR_EMAIL` 等，详见第 6 节「邮件通知」 |
 | 评论先审核再显示 | `COMMENT_AUDIT=true` |
 | 禁止匿名评论 | `LOGIN=force` |
 
@@ -95,6 +95,44 @@
 
 ### 管理评论
 登录 <https://waline-comment-tawny-zeta.vercel.app/ui>，可以审核、删除、置顶评论，或者标记为垃圾评论。管理员登录后，在博客评论区回复会带「博主」标识。
+
+### 邮件通知
+
+以下规则对照 `@waline/vercel` 1.43.4 的源码 `src/service/notify.js` 核对过。
+
+**会发哪些邮件：**
+
+| 场景 | 收件人 |
+|---|---|
+| 有人在博客发表评论 | 博主，发到 `AUTHOR_EMAIL` |
+| 有人回复了某条评论 | 被回复的人，前提是他评论时填了邮箱。开启审核后，要等评论审核通过才会发 |
+| 博主用管理员账号发评论或回复 | 不发给博主自己 |
+
+**1. 准备一个能发信的邮箱（SMTP）**
+
+- **Gmail（推荐）**：先在 <https://myaccount.google.com/security> 开启两步验证，再到 <https://myaccount.google.com/apppasswords> 创建一个名为 `waline` 的应用专用密码。密码是 16 位，只显示一次，而且**不是** Gmail 的登录密码。
+- **QQ 邮箱**：进入设置 → 账户，开启 POP3/SMTP 服务，拿到**授权码**。下表中 `SMTP_SERVICE` 改填 `QQ`，`SMTP_PASS` 填授权码。
+
+**2. 在 Vercel 添加环境变量，然后 Redeploy**
+
+| Key | Value | 说明 |
+|---|---|---|
+| `SMTP_SERVICE` | `Gmail` 或 `QQ` | 用 nodemailer 内置的服务名，就不用填 `SMTP_HOST` 和 `SMTP_PORT` |
+| `SMTP_USER` | 发信邮箱地址 | |
+| `SMTP_PASS` | 应用专用密码或授权码 | 去掉中间的空格 |
+| `AUTHOR_EMAIL` | 博主接收通知的邮箱 | 可以和发信邮箱相同 |
+| `SENDER_NAME` | 如 `Frank Young 的博客` | 可选，发件人显示名 |
+| `SENDER_EMAIL` | 和 `SMTP_USER` 相同 | 可选，**必须和 `SENDER_NAME` 同时设置**才会生效；不设置时发件人就是 `SMTP_USER` |
+
+邮件里跳回博客的链接用的是已经配置好的 `SITE_NAME` 和 `SITE_URL`。想改邮件标题或正文模板，可以设置 `MAIL_SUBJECT`、`MAIL_TEMPLATE`（发给被回复者），以及 `MAIL_SUBJECT_ADMIN`、`MAIL_TEMPLATE_ADMIN`（发给博主）。
+
+**3. 测试**
+
+用**无痕窗口**打开文章，不登录、随便填个昵称发一条评论，因为管理员自己的评论不会触发通知。然后到 `AUTHOR_EMAIL` 收件箱查收，记得也看看垃圾邮件文件夹。
+
+**注意：**
+- 如果配置了微信、QQ、Telegram、飞书、Discord、PushPlus 等**其他通知渠道**（例如同时设置了 `TG_BOT_TOKEN` 和 `TG_CHAT_ID`），就**不会再给博主发邮件**，二选一。发给被回复者的邮件不受影响。
+- 想关闭给博主的通知，可以设置 `DISABLE_AUTHOR_NOTIFY=true`。注意：只要这个变量有值就会生效，写成 `false` 也一样会关闭，想恢复通知要直接删掉这个变量。
 
 ### 备份（建议每月一次，或在大改之前）
 在后台 `/ui` 的 **导入/导出** 页面导出一份 JSON，保存到本地或网盘。迁移到新数据库时，用同一个页面导入。
@@ -131,4 +169,5 @@ curl -s -H "Referer: https://frank2679.github.io/" \
 | 返回 `403 Forbidden` | 检查 `SECURE_DOMAINS` 的拼写，以及有没有混进空格、Tab 或 `https://`；改完记得 Redeploy |
 | 返回 `500` | 查看 Vercel 项目的 **Logs**。常见原因：数据库没关联（缺少 `PG*` 变量）、表没建（日志里有 `relation "wl_comment" does not exist`）、Neon 免费额度用完 |
 | curl 正常，但博客上不显示评论区 | 打开浏览器开发者工具看 Console 和 Network；确认 `src/config/waline.ts` 里有地址，并且线上已经部署了最新版本 |
+| 收不到邮件通知 | 在 Vercel **Logs** 里搜：出现 `Notification mail send success` 说明已发出，去垃圾箱找；出现 `Mail send fail` 就看后面的原因，`Invalid login` 通常是 `SMTP_PASS` 填成了登录密码，或者带了空格。另外确认测试时没有登录管理员账号，改完变量也已经 Redeploy |
 | 阅读数一直显示 `–` | 和上一行一样，阅读数也依赖同一个接口 |
