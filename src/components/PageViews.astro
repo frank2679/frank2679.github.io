@@ -1,0 +1,33 @@
+---
+import { WALINE_SERVER_URL } from '../config/waline';
+
+interface Props {
+  path: string;
+}
+
+const { path } = Astro.props;
+---
+
+{WALINE_SERVER_URL && (
+  <span class="page-views" data-waline-pageview data-server={WALINE_SERVER_URL} data-path={path}>
+    <span class="waline-pageview-count" data-path={path}>–</span>
+    <span data-i18n="en">views</span><span data-i18n="zh">次阅读</span>
+  </span>
+)}
+
+<script>
+  import { pageviewCount } from '@waline/client/pageview';
+
+  const el = document.querySelector<HTMLElement>('[data-waline-pageview]');
+  if (el?.dataset.server && el.dataset.path) {
+    pageviewCount({ serverURL: el.dataset.server, path: el.dataset.path });
+  }
+</script>
+
+<style>
+  .page-views {
+    color: var(--text-muted);
+    font-size: 0.83rem;
+    font-family: var(--font-mono);
+  }
+</style>
