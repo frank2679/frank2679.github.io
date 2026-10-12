@@ -59,6 +59,19 @@ const formatted = post.data.date.toLocaleDateString('en-US', {
           )}
         </header>
 
+        {toc.length > 2 && (
+          <details class="toc-mobile">
+            <summary><span data-i18n="en">On this page</span><span data-i18n="zh">本页目录</span></summary>
+            <ul>
+              {toc.map((h) => (
+                <li class={`toc-level-${h.depth}`}>
+                  <a href={`#${h.slug}`}>{h.text}</a>
+                </li>
+              ))}
+            </ul>
+          </details>
+        )}
+
         <div class="prose">
           <Content />
         </div>
@@ -99,6 +112,12 @@ const formatted = post.data.date.toLocaleDateString('en-US', {
     const targets = links
       .map((link) => document.getElementById(link.dataset.slug ?? ''))
       .filter((el): el is HTMLElement => el !== null);
+
+    // Collapse the mobile outline after jumping to a section.
+    const mobileToc = document.querySelector<HTMLDetailsElement>('.toc-mobile');
+    mobileToc?.querySelectorAll('a').forEach((a) =>
+      a.addEventListener('click', () => { mobileToc.open = false; })
+    );
 
     if (targets.length > 0) {
       const setActive = (slug: string | null) => {
@@ -196,6 +215,43 @@ const formatted = post.data.date.toLocaleDateString('en-US', {
     padding-left: 0.9rem;
   }
 
+  .toc-mobile {
+    display: none;
+    margin-bottom: 2rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0.75rem 1rem;
+  }
+
+  .toc-mobile summary {
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+  }
+
+  .toc-mobile ul {
+    list-style: none;
+    padding: 0;
+    margin: 0.75rem 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .toc-mobile a {
+    display: block;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+
+  .toc-mobile a:hover {
+    color: var(--accent);
+  }
+
   @media (max-width: 1080px) {
     .layout.with-toc {
       grid-template-columns: 1fr;
@@ -204,6 +260,10 @@ const formatted = post.data.date.toLocaleDateString('en-US', {
 
     .toc-sidebar {
       display: none;
+    }
+
+    .toc-mobile {
+      display: block;
     }
   }
 
