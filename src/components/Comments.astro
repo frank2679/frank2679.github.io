@@ -34,6 +34,8 @@ const { path } = Astro.props;
         reaction: false,
         imageUploader: false,
         search: false,
+        // Default preset loads from protocol-relative unpkg; pin an https CDN instead.
+        emoji: ['https://cdn.jsdelivr.net/npm/@waline/emojis@1.1.0/weibo'],
       });
 
       // Follow the site-wide EN/中文 toggle.
