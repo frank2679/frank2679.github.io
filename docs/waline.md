@@ -23,7 +23,7 @@
 
 | 组件 | 位置 | 说明 |
 |---|---|---|
-| 服务端代码仓库 | GitHub 私有仓库 [`frank2679/waline-frank2679-io`](https://github.com/frank2679/waline-frank2679-io) | Vercel 从官方模板复制生成，里面只有依赖 `@waline/vercel` 的少量文件；推送后 Vercel 自动部署 |
+| 服务端代码仓库 | GitHub 私有仓库 [`frank2679/waline-comment`](https://github.com/frank2679/waline-comment) | Vercel 从官方模板复制生成，里面只有依赖 `@waline/vercel` 的少量文件；推送后 Vercel 自动部署 |
 | 服务端部署 | Vercel 项目 `waline-comment` | 正式域名 `waline-comment-tawny-zeta.vercel.app` |
 | 数据库 | Neon（通过 Vercel **Storage** 创建并关联） | 连接信息由 Vercel 自动写入环境变量，不需要手动管理 |
 | 管理后台 | <https://waline-comment-tawny-zeta.vercel.app/ui> | 第一个注册的账号就是管理员（已注册） |
