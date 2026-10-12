@@ -264,7 +264,8 @@ const formatted = post.data.date.toLocaleDateString('en-US', {
 
   @media (max-width: 1080px) {
     .layout.with-toc {
-      grid-template-columns: 1fr;
+      /* minmax(0, …) so wide code blocks scroll inside themselves instead of widening the page */
+      grid-template-columns: minmax(0, 1fr);
       max-width: var(--max-w);
     }
 
