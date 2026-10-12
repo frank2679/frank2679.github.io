@@ -12,7 +12,8 @@
     "sync:resume": "node scripts/sync-resume.mjs"
   },
   "dependencies": {
-    "astro": "^5.0.0",
-    "@astrojs/sitemap": "^3.0.0"
+    "@astrojs/sitemap": "^3.0.0",
+    "@waline/client": "^3.16.1",
+    "astro": "^5.0.0"
   }
 }

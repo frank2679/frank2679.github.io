@@ -2,6 +2,8 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Nav from '../../components/Nav.astro';
 import Footer from '../../components/Footer.astro';
+import PageViews from '../../components/PageViews.astro';
+import Comments from '../../components/Comments.astro';
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -18,6 +20,9 @@ interface Props {
 
 const { post } = Astro.props;
 const { Content, headings } = await render(post);
+
+// Stable Waline key per post, independent of trailing-slash variants of the URL.
+const walinePath = `/blog/${post.id}/`;
 
 const toc = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
 
@@ -45,7 +50,10 @@ const formatted = post.data.date.toLocaleDateString('en-US', {
               </svg>
               <span data-i18n="en">All posts</span><span data-i18n="zh">全部文章</span>
             </a>
-            <time datetime={post.data.date.toISOString()}>{formatted}</time>
+            <div class="post-stats">
+              <time datetime={post.data.date.toISOString()}>{formatted}</time>
+              <PageViews path={walinePath} />
+            </div>
           </div>
 
           <h1>{post.data.title}</h1>
@@ -75,6 +83,8 @@ const formatted = post.data.date.toLocaleDateString('en-US', {
         <div class="prose">
           <Content />
         </div>
+
+        <Comments path={walinePath} />
 
         <footer class="post-footer">
           <a href="/blog" class="back-link">
@@ -293,6 +303,12 @@ const formatted = post.data.date.toLocaleDateString('en-US', {
 
   .back-link:hover {
     color: var(--accent);
+  }
+
+  .post-stats {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
   }
 
   time {

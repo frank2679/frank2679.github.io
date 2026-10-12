@@ -1,0 +1,88 @@
+---
+import { WALINE_SERVER_URL } from '../config/waline';
+
+interface Props {
+  path: string;
+}
+
+const { path } = Astro.props;
+---
+
+{WALINE_SERVER_URL && (
+  <section class="comments" aria-label="Comments">
+    <div id="waline" data-server={WALINE_SERVER_URL} data-path={path}></div>
+  </section>
+)}
+
+<script>
+  const el = document.getElementById('waline');
+
+  if (el?.dataset.server) {
+    const { server, path } = el.dataset;
+    const walineLang = () => (document.documentElement.getAttribute('data-lang') === 'zh' ? 'zh-CN' : 'en');
+
+    const load = async () => {
+      const [{ init }] = await Promise.all([import('@waline/client'), import('@waline/client/style')]);
+      const waline = init({
+        el,
+        serverURL: server,
+        path,
+        lang: walineLang(),
+        // Pageviews are counted by PageViews.astro; comments only here.
+        pageview: false,
+        comment: false,
+        reaction: false,
+        imageUploader: false,
+        search: false,
+        // Default preset loads from protocol-relative unpkg; pin an https CDN instead.
+        emoji: ['https://cdn.jsdelivr.net/npm/@waline/emojis@1.1.0/weibo'],
+      });
+
+      // Follow the site-wide EN/中文 toggle.
+      new MutationObserver(() => waline?.update({ lang: walineLang() })).observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['data-lang'],
+      });
+    };
+
+    // Only fetch the comment widget when the reader scrolls near it.
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          observer.disconnect();
+          load();
+        }
+      },
+      { rootMargin: '400px 0px' }
+    );
+    observer.observe(el);
+  }
+</script>
+
+<style>
+  .comments {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+  }
+
+  /* Map Waline's palette onto the site's dark theme. */
+  #waline {
+    --waline-theme-color: var(--accent);
+    --waline-active-color: var(--accent-hover);
+    --waline-color: var(--text-primary);
+    --waline-bg-color: var(--bg-card);
+    --waline-bg-color-light: var(--bg-secondary);
+    --waline-bg-color-hover: var(--bg-hover);
+    --waline-border-color: var(--border);
+    --waline-disable-bg-color: var(--bg-secondary);
+    --waline-disable-color: var(--text-muted);
+    --waline-code-bg-color: var(--code-bg);
+    --waline-bq-color: var(--border);
+    --waline-info-bg-color: var(--bg-secondary);
+    --waline-info-color: var(--text-secondary);
+    --waline-light-grey: var(--text-muted);
+    --waline-dark-grey: var(--text-secondary);
+    --waline-white: var(--bg-primary);
+  }
+</style>
